@@ -12,9 +12,10 @@ class MillenaController extends Controller
         return view('millena.holding');
     }
 
-    public function anper($ptpn)
+    public function anper(Company $ptpn)
     {
-        return view('millena.anper');
+        return redirect('ptpn/'.$ptpn->KODE.'/'.$ptpn->pks()->first()->KODE);
+        //return view('millena.anper');
     }
 
     public function pks($ptpn,$pks)

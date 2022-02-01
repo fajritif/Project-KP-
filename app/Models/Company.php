@@ -12,4 +12,9 @@ class Company extends Model
     protected $table='M_COMPANY';
     protected $primaryKey = 'KODE';
     protected $keyType = 'string';
+
+    public function pks(){
+        return $this->hasMany(Pks::class, 'COMPANY_CODE')->where('NAMA','LIKE','%PKS%')
+            ->orWhere('NAMA','LIKE','%SAWIT%');
+    }
 }

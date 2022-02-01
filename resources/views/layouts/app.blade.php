@@ -383,31 +383,24 @@
 			</div>
 			<nav class="topbar-nav">
 				<ul class="metismenu" id="menu">
-					<li style="max-width: 300px">
+					<li style="max-width: 500px">
 						<a href="javascript:;" class="has-arrow">
 							<div class="parent-icon"><i class='bx bx-home-circle'></i>
 							</div>
 							<div class="menu-title">Pilih PTPN</div>
 						</a>
 						<ul>
+							@foreach($companies as $company)
 							<li> 
-                                <a href="#"><i class="bx bx-right-arrow-alt" ></i>PTPN I</a>
+                                <a href="#"><i class="bx bx-right-arrow-alt" ></i>{{ $company->NAMA }}</a>
                                 <ul>
-                                    <li> <a href="index.html">&ensp;&ensp;&ensp;&ensp;PKS I</a>
+									@foreach($company->pks as $pks)
+                                    <li> <a href="{{ url('ptpn/'.$company->KODE.'/'.$pks->KODE) }}">&ensp;&ensp;&ensp;&ensp;{{ $pks->NAMA }}</a>
                                     </li>
-                                    <li> <a href="index2.html">&ensp;&ensp;&ensp;&ensp;PKS II</a>
-                                    </li>
+									@endforeach
                                 </ul>
 							</li>
-							<li> 
-                                <a href="#"><i class="bx bx-right-arrow-alt" ></i>PTPN II</a>
-                                <ul>
-                                    <li> <a href="index.html">&ensp;&ensp;&ensp;&ensp;PKS I</a>
-                                    </li>
-                                    <li> <a href="index2.html">&ensp;&ensp;&ensp;&ensp;PKS II</a>
-                                    </li>
-                                </ul>
-							</li>
+							@endforeach
 						</ul>
 					</li>
                     {{--
@@ -648,8 +641,6 @@
 		</div>
 	</div>
 	<!--end switcher-->
-
-	{{ $companies }}
 
 	@section('js')
 
