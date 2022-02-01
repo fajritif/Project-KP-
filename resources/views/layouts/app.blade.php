@@ -385,7 +385,7 @@
 				<ul class="metismenu" id="menu">
 					<li style="max-width: 500px">
 						<a href="javascript:;" class="has-arrow">
-							<div class="parent-icon"><i class='bx bx-home-circle'></i>
+							<div class="parent-icon"><i class='bx bxs-business'></i>
 							</div>
 							<div class="menu-title">Pilih PTPN</div>
 						</a>
@@ -563,7 +563,9 @@
 		<!--end navigation-->
 		<!--start page wrapper -->
 		<div class="page-wrapper">
-			<div class="page-content"></div>
+			<div class="page-content">
+				@yield('content')
+			</div>
 		</div>
 		<!--end page wrapper -->
 		<!--start overlay-->
