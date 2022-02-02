@@ -33,6 +33,7 @@ Route::prefix('test')->group(function () {
     Route::get('/home', function () {
         return view('layouts.app');
     });
+    Route::get('/auth1', [MillenaController::class, 'auth1']);
 });
 
 Route::get('/ptpn', [MillenaController::class, 'holding']);

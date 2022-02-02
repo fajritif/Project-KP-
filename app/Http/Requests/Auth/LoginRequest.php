@@ -29,10 +29,18 @@ class LoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['required', 'string', 'email'],
-            'password' => ['required', 'string'],
+            'NIK_SAP' => ['required', 'string'],
+            'USER_PASSWORD' => ['required', 'string'],
         ];
     }
+
+    public function messages()
+{
+    return [
+        'NIK_SAP.required' => 'NIK SAP harus diisi.',
+        'USER_PASSWORD.required' =>'Password harus diisi.',
+    ];
+}
 
     /**
      * Attempt to authenticate the request's credentials.
@@ -45,11 +53,11 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        if (! Auth::attempt($this->only('NIK_SAP', 'USER_PASSWORD'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'NIK_SAP' => __('auth.failed'),
             ]);
         }
 
@@ -74,7 +82,7 @@ class LoginRequest extends FormRequest
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'NIK_SAP' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -88,6 +96,6 @@ class LoginRequest extends FormRequest
      */
     public function throttleKey()
     {
-        return Str::lower($this->input('email')).'|'.$this->ip();
+        return Str::lower($this->input('NIK_SAP')).'|'.$this->ip();
     }
 }

@@ -61,8 +61,11 @@ return [
 
     'providers' => [
         'users' => [
+            /*
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+            */
+            'driver' => 'holding',  // gunakan driver HoldingUserProvider via SQL SERVER
         ],
 
         // 'users' => [
