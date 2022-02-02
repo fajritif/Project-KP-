@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DeviceController extends Controller
 {
@@ -81,5 +82,10 @@ class DeviceController extends Controller
     public function destroy(Device $device)
     {
         //
+    }
+
+    public function current($pks) {
+        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS 'EF01'");
+        return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
     }
 }

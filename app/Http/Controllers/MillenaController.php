@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class MillenaController extends Controller
 {
@@ -20,7 +21,8 @@ class MillenaController extends Controller
 
     public function pks($ptpn,$pks)
     {
-        return view('millena.pks');
+        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS 'EF01'");
+        return view('millena.pks', compact('data'));
     }
 
     public function history($ptpn,$pks)
