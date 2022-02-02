@@ -12,7 +12,7 @@
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
         @foreach($data as $item)
             <div class="col">
-                <div class="card radius-10 ">
+                <div class="card radius-10" onclick="handleClickDevice('{{ $item->DEVICE_ID }}')" style="cursor: pointer">
                     <div class="card-body">
                         <div class="align-items-center">
                             <div class="text-center">
@@ -36,6 +36,10 @@
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts.js"></script>
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
     <script>
+
+        function handleClickDevice(deviceId) {
+            window.location.href = '{{ url("ptpn/device/") }}/'+deviceId
+        }
 
         function drawGaugeChart(chartId, lastUpdateId, temperature, lastUpdate) {
             if (lastUpdate) {

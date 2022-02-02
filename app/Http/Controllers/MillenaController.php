@@ -19,13 +19,13 @@ class MillenaController extends Controller
         //return view('millena.anper');
     }
 
-    public function pks($ptpn,$pks)
+    public function pks($pks)
     {
-        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS 'EF01'");
+        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS '$pks'");
         return view('millena.pks', compact('data'));
     }
 
-    public function history($ptpn,$pks)
+    public function history($deviceId)
     {
         return view('millena.history');
     }

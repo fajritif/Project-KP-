@@ -36,9 +36,10 @@ Route::prefix('test')->group(function () {
 });
 
 Route::get('/ptpn', [MillenaController::class, 'holding']);
-Route::get('/ptpn/{ptpn}', [MillenaController::class, 'anper']);
-Route::get('/ptpn/{ptpn}/{pks}', [MillenaController::class, 'pks']);
-Route::get('/ptpn/{ptpn}/{pks}/history', [MillenaController::class, 'history']);
+Route::get('/ptpn/device/{deviceId}', [MillenaController::class, 'history']);
+//Route::get('/ptpn/{ptpn}', [MillenaController::class, 'anper']);
+Route::get('/ptpn/pks/{pks}', [MillenaController::class, 'pks']);
+//Route::get('/ptpn/{ptpn}/{pks}/history', [MillenaController::class, 'history']);
 
 
 Route::prefix('api')->group(function () {
