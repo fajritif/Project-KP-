@@ -20,6 +20,9 @@
                             </div>
                         </div>
                         <div class="" id="{{ $item->DEVICE_ID }}"></div>
+                        <div class="align-items-center">
+                            <span id="{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -34,7 +37,12 @@
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
     <script>
 
-        function drawGaugeChart(chartId, temperature) {
+        function drawGaugeChart(chartId, lastUpdateId, temperature, lastUpdate) {
+            if (lastUpdate) {
+                document.getElementById(lastUpdateId).textContent = "Last Update "+lastUpdate;
+            } else {
+                document.getElementById(lastUpdateId).textContent = "Device Not Active";
+            }
             let chart = Highcharts.chart(chartId, {
                     chart: {
                         type: 'gauge',
@@ -50,9 +58,6 @@
                     },
                     title: {
                         text: null
-                    },
-                    events: {
-
                     },
                     pane: {
                         startAngle: -150,
@@ -155,15 +160,25 @@
         $(document).ready(function () {
             let arrGauge = []
             @foreach($data as $item)
-            arrGauge["{{ $item->DEVICE_ID  }}"] = drawGaugeChart('{{ $item->DEVICE_ID }}', {{ $item->TEMPERATURE }})
+                @php
+                $fDate = null;
+                if ($item->TANGGAL != null) { $fDate = date('d M Y H:i:s', strtotime($item->TANGGAL)); }
+                @endphp
+                arrGauge["{{ $item->DEVICE_ID  }}"] =
+                drawGaugeChart(
+                    '{{ $item->DEVICE_ID }}',
+                    '{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}',
+                    {{ $item->TEMPERATURE }},
+                    '{{ $fDate ?: "" }}'
+                )
             @endforeach
-            setInterval(function() {
-                fetch('{{ url('api/device-per-pks/EF01') }}').then(function(response) {
+            setInterval(function () {
+                fetch('{{ url('api/device-per-pks/EF01') }}').then(function (response) {
                     return response.json()
-                }).then(function(data) {
+                }).then(function (data) {
                     data.forEach((element) => {
                         //arrGauge[element.DEVICE_ID].series[0].points[0].update(Math.round(element.TEMPERATURE*100)/100)
-                        arrGauge[element.DEVICE_ID].series[0].points[0].update(Math.round(Math.random()*25*100)/100)
+                        arrGauge[element.DEVICE_ID].series[0].points[0].update(Math.round(Math.random() * 25 * 100) / 100)
                     })
                 })
             }, 3000)
