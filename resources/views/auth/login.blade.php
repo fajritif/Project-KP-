@@ -20,6 +20,11 @@
 	<link href="{{ url('') }}/assets/css/app.css" rel="stylesheet">
 	<link href="{{ url('') }}/assets/css/icons.css" rel="stylesheet">
 	<title>Millena</title>
+	<style>
+		.text-logo-big{
+			font-size: 40pt;
+		}
+	</style>
 </head>
 
 <body class="bg-login">
@@ -31,6 +36,7 @@
 					<div class="col mx-auto">
 						<div class="mb-4 text-center">
 							<img src="{{ url('millena.png') }}" width="100" alt="" />
+							{{-- <span class="text-logo-big">&nbsp;Millena</span> --}}
 						</div>
 						<div class="card">
 							<div class="card-body">
