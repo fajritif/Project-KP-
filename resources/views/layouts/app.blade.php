@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/dark-theme.css" />
         <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/semi-dark.css" />
         <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/header-colors.css" />
-        <title>@yield('title', 'Millena')</title>
+	<title>@yield('title', 'Millena')</title>
 
         @livewireStyles
 	@show
