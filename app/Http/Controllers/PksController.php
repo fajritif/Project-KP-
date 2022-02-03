@@ -82,4 +82,10 @@ class PksController extends Controller
     {
         //
     }
+
+    public function by_company($company_code)
+    {
+        $pkss = Pks::where('COMPANY_CODE', $company_code)->get();
+        return response()->json($pkss);
+    }
 }

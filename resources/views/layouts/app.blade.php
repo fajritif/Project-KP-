@@ -52,15 +52,15 @@
                 @foreach($companies as $company)
                     <li> 
                         <a href="#" class="has-arrow">
-                            <div class="parent-icon"><i class='bx bxs-buildings'></i>
+                            <div class="parent-icon">
+                                {{-- <i class='bx bxs-buildings'></i> --}}
+                                <img src="{{ url($company->IMAGE) }}" alt="" height="28">
                             </div>
                             <div class="menu-title">{{ $company->NAMA }}</div>
                         </a>
                         <ul>
-                            @foreach($company->pks as $pks)
-                            </li>
-                            
-                                <li> <a href="{{ url('ptpn/pks/'.$pks->KODE) }}"><i class="bx bx-right-arrow-alt"></i>{{ Str::of(Str::title($pks->NAMA))->replace('Pks','PKS') }}</a>
+                            @foreach($company->pks as $pks)                            
+                                <li><a href="{{ url('ptpn/pks/'.$pks->KODE) }}">&ensp;<i class='bx bxs-factory'></i>{{ $pks->nama2 }}</a>
                                 </li>
                             @endforeach
                         </ul>
