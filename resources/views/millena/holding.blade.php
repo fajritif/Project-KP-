@@ -31,12 +31,11 @@
                 }).then(function (data) {
 
                     data.forEach((element) => {
-                       var data={x:element.KODE_DEVICE,y:element.NAMA_PTPN,z:element.TEKANAN}
-                       item.push(data)
+                       item.push(element)
                     })
 
                 })
-console.log(item.data)
+console.log(item.object[0])
         var options = {
 
           series: [{name:item,data:item}]
