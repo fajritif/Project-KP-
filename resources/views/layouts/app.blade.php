@@ -8,65 +8,129 @@
 	<!--favicon-->
 	<link rel="icon" href="{{ url('') }}/millena.png" type="image/png" />
 	<!--plugins-->
-	<link href="{{ url('') }}/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
-	<link href="{{ url('') }}/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
-	<link href="{{ url('') }}/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
+	<link href="{{ url('vertical') }}/assets/plugins/simplebar/css/simplebar.css" rel="stylesheet" />
+	<link href="{{ url('vertical') }}/assets/plugins/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" />
+	<link href="{{ url('vertical') }}/assets/plugins/metismenu/css/metisMenu.min.css" rel="stylesheet" />
 	<!-- loader-->
-	<link href="{{ url('') }}/assets/css/pace.min.css" rel="stylesheet" />
-	<script src="{{ url('') }}/assets/js/pace.min.js"></script>
-
-	@section('css')
-
+	<link href="{{ url('vertical') }}/assets/css/pace.min.css" rel="stylesheet" />
+	<script src="{{ url('vertical') }}/assets/js/pace.min.js"></script>
 	<!-- Bootstrap CSS -->
-	<link href="{{ url('') }}/assets/css/bootstrap.min.css" rel="stylesheet">
+	<link href="{{ url('vertical') }}/assets/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-	<link href="{{ url('') }}/assets/css/app.css" rel="stylesheet">
-	<link href="{{ url('') }}/assets/css/icons.css" rel="stylesheet">
+	<link href="{{ url('vertical') }}/assets/css/app.css" rel="stylesheet">
+	<link href="{{ url('vertical') }}/assets/css/icons.css" rel="stylesheet">
 	<!-- Theme Style CSS -->
-	<link rel="stylesheet" href="{{ url('') }}/assets/css/dark-theme.css" />
-	<link rel="stylesheet" href="{{ url('') }}/assets/css/semi-dark.css" />
-	<link rel="stylesheet" href="{{ url('') }}/assets/css/header-colors.css" />
-	<title>@yield('title', 'Millena')</title>
-
-	@livewireStyles
-	@show
-
+	<link rel="stylesheet" href="{{ url('vertical') }}/assets/css/dark-theme.css" />
+	<link rel="stylesheet" href="{{ url('vertical') }}/assets/css/semi-dark.css" />
+	<link rel="stylesheet" href="{{ url('vertical') }}/assets/css/header-colors.css" />
+	<title>Rocker - Bootstrap 5 Admin Dashboard Template</title>
 </head>
 
 <body>
 	<!--wrapper-->
 	<div class="wrapper">
+		<!--sidebar wrapper -->
+		<div class="sidebar-wrapper" data-simplebar="true">
+			<div class="sidebar-header">
+				<div>
+                    <img src="{{ url('') }}/millena.png" class="logo-icon" alt="logo icon">
+				</div>
+				<div>
+                    <h4 class="logo-text">Millena</h4>
+				</div>
+				<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
+				</div>
+			</div>
+			<!--navigation-->
+			<ul class="metismenu" id="menu">
+                @foreach($companies as $company)
+                    <li> 
+                        <a href="#" class="has-arrow">
+                            <div class="parent-icon"><i class='bx bxs-buildings'></i>
+                            </div>
+                            <div class="menu-title">{{ $company->NAMA }}</div>
+                        </a>
+                        <ul>
+                            @foreach($company->pks as $pks)
+                            </li>
+                            
+                                <li> <a href="{{ url('ptpn/pks/'.$pks->KODE) }}"><i class="bx bx-right-arrow-alt"></i>{{ Str::of(Str::title($pks->NAMA))->replace('Pks','PKS') }}</a>
+                                </li>
+                            @endforeach
+                        </ul>
+                    </li>
+                @endforeach
+                {{--
+				<li>
+					<a href="javascript:;" class="">
+						<div class="parent-icon"><i class='bx bx-log-out'></i>
+						</div>
+						<div class="menu-title">Logout</div>
+					</a>
+
+                    <button type="submit" form="logout_form" class="btn-link"><i class='bx bx-log-out-circle'></i><span>Logout</span></button>
+                    
+				</li>
+				--}}
+			</ul>
+			<!--end navigation-->
+		</div>
+		<!--end sidebar wrapper -->
 		<!--start header -->
 		<header>
 			<div class="topbar d-flex align-items-center">
 				<nav class="navbar navbar-expand">
-					<div class="topbar-logo-header">
-						<div class="">
-							<img src="{{ url('') }}/millena.png" class="logo-icon" alt="logo icon">
-						</div>
-						<div class="">
-							<h4 class="logo-text">Millena</h4>
-						</div>
+					<div class="mobile-toggle-menu"><i class='bx bx-menu'></i>
 					</div>
-                    
-                    
-					<div class="mobile-toggle-menu"><i class='bx bx-menu'></i></div>
-					<div class="flex-grow-1">
-                        {{--
+					<div class="search-bar flex-grow-1">
 						<div class="position-relative search-bar-box">
-							<input type="dropdown" class="form-control search-control" placeholder="Type to search..."> <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
+							<input type="text" class="form-control search-control" placeholder="Type to search..."> <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
 							<span class="position-absolute top-50 search-close translate-middle-y"><i class='bx bx-x'></i></span>
 						</div>
-                        --}}
 					</div>
 					<div class="top-menu ms-auto">
-                        
 						<ul class="navbar-nav align-items-center">
-                            
-                            
 							<li class="nav-item mobile-search-icon">
 								<a class="nav-link" href="#">	<i class='bx bx-search'></i>
 								</a>
+							</li>
+							<li class="nav-item dropdown dropdown-large">
+								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">	<i class='bx bx-category'></i>
+								</a>
+								<div class="dropdown-menu dropdown-menu-end">
+									<div class="row row-cols-3 g-3 p-3">
+										<div class="col text-center">
+											<div class="app-box mx-auto bg-gradient-cosmic text-white"><i class='bx bx-group'></i>
+											</div>
+											<div class="app-title">Teams</div>
+										</div>
+										<div class="col text-center">
+											<div class="app-box mx-auto bg-gradient-burning text-white"><i class='bx bx-atom'></i>
+											</div>
+											<div class="app-title">Projects</div>
+										</div>
+										<div class="col text-center">
+											<div class="app-box mx-auto bg-gradient-lush text-white"><i class='bx bx-shield'></i>
+											</div>
+											<div class="app-title">Tasks</div>
+										</div>
+										<div class="col text-center">
+											<div class="app-box mx-auto bg-gradient-kyoto text-dark"><i class='bx bx-notification'></i>
+											</div>
+											<div class="app-title">Feeds</div>
+										</div>
+										<div class="col text-center">
+											<div class="app-box mx-auto bg-gradient-blues text-dark"><i class='bx bx-file'></i>
+											</div>
+											<div class="app-title">Files</div>
+										</div>
+										<div class="col text-center">
+											<div class="app-box mx-auto bg-gradient-moonlit text-white"><i class='bx bx-filter-alt'></i>
+											</div>
+											<div class="app-title">Alerts</div>
+										</div>
+									</div>
+								</div>
 							</li>
 							<li class="nav-item dropdown dropdown-large">
 								<a class="nav-link dropdown-toggle dropdown-toggle-nocaret position-relative" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"> <span class="alert-count">7</span>
@@ -200,7 +264,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-1.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-1.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Daisy Anderson <span class="msg-time float-end">5 sec
@@ -212,7 +276,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-2.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-2.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Althea Cabardo <span class="msg-time float-end">14
@@ -224,7 +288,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-3.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-3.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Oscar Garner <span class="msg-time float-end">8 min
@@ -236,7 +300,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-4.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-4.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Katherine Pechon <span class="msg-time float-end">15
@@ -248,7 +312,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-5.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-5.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Amelia Doe <span class="msg-time float-end">22 min
@@ -260,7 +324,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-6.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-6.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Cristina Jhons <span class="msg-time float-end">2 hrs
@@ -272,7 +336,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-7.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-7.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">James Caviness <span class="msg-time float-end">4 hrs
@@ -284,7 +348,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-8.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-8.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Peter Costanzo <span class="msg-time float-end">6 hrs
@@ -296,7 +360,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-9.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-9.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">David Buckley <span class="msg-time float-end">2 hrs
@@ -308,7 +372,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-10.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-10.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Thomas Wheeler <span class="msg-time float-end">2 days
@@ -320,7 +384,7 @@
 										<a class="dropdown-item" href="javascript:;">
 											<div class="d-flex align-items-center">
 												<div class="user-online">
-													<img src="{{ url('') }}/assets/images/avatars/avatar-11.png" class="msg-avatar" alt="user avatar">
+													<img src="{{ url('vertical') }}/assets/images/avatars/avatar-11.png" class="msg-avatar" alt="user avatar">
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">Johnny Seitz <span class="msg-time float-end">5 days
@@ -339,240 +403,27 @@
 					</div>
 					<div class="user-box dropdown">
 						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-							<img src="{{ url('') }}/assets/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
+							<img src="{{ url('vertical') }}/assets/images/avatars/avatar-2.png" class="user-img" alt="user avatar">
 							<div class="user-info ps-3">
 								<p class="user-name mb-0">{{ auth()->id() }}</p>
-								<p class="designattion mb-0">{{ auth()->user()->ROLEID }}</p>
+								<p class="designattion mb-0">{{ auth()->user()?auth()->user()->ROLEID:'' }}</p>
 							</div>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end">
-                            {{--
-							<li><a class="dropdown-item" href="javascript:;"><i class="bx bx-user"></i><span>Profile</span></a>
-							</li>
-							<li><a class="dropdown-item" href="javascript:;"><i class="bx bx-cog"></i><span>Settings</span></a>
-							</li>
-							<li><a class="dropdown-item" href="javascript:;"><i class='bx bx-home-circle'></i><span>Dashboard</span></a>
-							</li>
-							<li><a class="dropdown-item" href="javascript:;"><i class='bx bx-dollar-circle'></i><span>Earnings</span></a>
-							</li>
-							<li><a class="dropdown-item" href="javascript:;"><i class='bx bx-download'></i><span>Downloads</span></a>
-							</li>
-							<li>
-								<div class="dropdown-divider mb-0"></div>
-							</li>
-                            --}}
-							<li>
-								{{--
-								<a class="dropdown-item" href="javascript:;"><i class='bx bx-log-out-circle'></i><span>Logout</span></a>
-								--}}
-								<button type="submit" form="logout_form" class="dropdown-item"><i class='bx bx-log-out-circle'></i><span>Logout</span</button>
-								<form method="POST"  action="{{ route('logout') }}" id="logout_form">
-									@csrf
-								</form>
-							</li>
+                            
+								<button type="submit" form="logout_form" class="dropdown-item"><i class='bx bx-log-out-circle'></i><span>Logout</span></button>
+                                    <form method="POST"  action="{{ route('logout') }}" id="logout_form">
+                                        @csrf
+                                    </form>
 						</ul>
 					</div>
 				</nav>
 			</div>
 		</header>
 		<!--end header -->
-		<!--navigation-->
-		<div class="nav-container">
-			<div class="mobile-topbar-header">
-				<div>
-					<img src="{{ url('') }}/millena.png" class="logo-icon" alt="logo icon">
-				</div>
-				<div>
-					<h4 class="logo-text">Millena</h4>
-				</div>
-				<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
-				</div>
-			</div>
-			<nav class="topbar-nav">
-				<ul class="metismenu" id="menu">
-					<li style="max-width: 500px">
-						<a href="javascript:;" class="has-arrow">
-							<div class="parent-icon"><i class='bx bxs-business'></i>
-							</div>
-							<div class="menu-title">Pilih PTPN</div>
-						</a>
-						<ul>
-							@foreach($companies as $company)
-							<li> 
-                                <a href="#"><i class="bx bx-right-arrow-alt" ></i>{{ $company->NAMA }}</a>
-                                <ul>
-									@foreach($company->pks as $pks)
-                                    <li> <a href="{{ url('ptpn/'.$company->KODE.'/'.$pks->KODE) }}">&ensp;&ensp;&ensp;&ensp;{{ $pks->NAMA }}</a>
-                                    </li>
-									@endforeach
-                                </ul>
-							</li>
-							@endforeach
-						</ul>
-					</li>
-                    {{--
-					<li>
-						<a href="javascript:;" class="has-arrow">
-							<div class="parent-icon"><i class="bx bx-category"></i>
-							</div>
-							<div class="menu-title">Application</div>
-						</a>
-						<ul>
-							<li> <a href="app-emailbox.html"><i class="bx bx-right-arrow-alt"></i>Email</a>
-							</li>
-							<li> <a href="app-chat-box.html"><i class="bx bx-right-arrow-alt"></i>Chat Box</a>
-							</li>
-							<li> <a href="app-file-manager.html"><i class="bx bx-right-arrow-alt"></i>File Manager</a>
-							</li>
-							<li> <a href="app-contact-list.html"><i class="bx bx-right-arrow-alt"></i>Contatcs</a>
-							</li>
-							<li> <a href="app-to-do.html"><i class="bx bx-right-arrow-alt"></i>Todo List</a>
-							</li>
-							<li> <a href="app-invoice.html"><i class="bx bx-right-arrow-alt"></i>Invoice</a>
-							</li>
-							<li> <a href="app-fullcalender.html"><i class="bx bx-right-arrow-alt"></i>Calendar</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a class="has-arrow" href="javascript:;">
-							<div class="parent-icon"><i class="bx bx-line-chart"></i>
-							</div>
-							<div class="menu-title">Charts</div>
-						</a>
-						<ul>
-							<li> <a href="charts-apex-chart.html"><i class="bx bx-right-arrow-alt"></i>Apex</a>
-							</li>
-							<li> <a href="charts-chartjs.html"><i class="bx bx-right-arrow-alt"></i>Chartjs</a>
-							</li>
-							<li> <a href="charts-highcharts.html"><i class="bx bx-right-arrow-alt"></i>Highcharts</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a class="has-arrow" href="javascript:;">
-							<div class="parent-icon"><i class='bx bx-bookmark-heart'></i>
-							</div>
-							<div class="menu-title">Components</div>
-						</a>
-						<ul>
-							<li> <a href="widgets.html"><i class="bx bx-right-arrow-alt"></i>Widgets</a>
-							</li>
-							<li> <a href="component-alerts.html"><i class="bx bx-right-arrow-alt"></i>Alerts</a>
-							</li>
-							<li> <a href="component-accordions.html"><i class="bx bx-right-arrow-alt"></i>Accordions</a>
-							</li>
-							<li> <a href="component-buttons.html"><i class="bx bx-right-arrow-alt"></i>Buttons</a>
-							</li>
-							<li> <a href="component-cards.html"><i class="bx bx-right-arrow-alt"></i>Cards</a>
-							</li>
-							<li> <a href="component-list-groups.html"><i class="bx bx-right-arrow-alt"></i>List Groups</a>
-							</li>
-							<li> <a href="component-media-object.html"><i class="bx bx-right-arrow-alt"></i>Media Objects</a>
-							</li>
-							<li> <a href="component-modals.html"><i class="bx bx-right-arrow-alt"></i>Modals</a>
-							</li>
-							<li> <a href="component-navs-tabs.html"><i class="bx bx-right-arrow-alt"></i>Navs & Tabs</a>
-							</li>
-							<li> <a href="component-navbar.html"><i class="bx bx-right-arrow-alt"></i>Navbar</a>
-							</li>
-							<li> <a href="component-popovers-tooltips.html"><i class="bx bx-right-arrow-alt"></i>Popovers & Tooltips</a>
-							</li>
-							<li> <a href="component-progress-bars.html"><i class="bx bx-right-arrow-alt"></i>Progress</a>
-							</li>
-							<li> <a href="component-spinners.html"><i class="bx bx-right-arrow-alt"></i>Spinners</a>
-							</li>
-							<li> <a href="component-notifications.html"><i class="bx bx-right-arrow-alt"></i>Notifications</a>
-							</li>
-							<li> <a href="component-avtars-chips.html"><i class="bx bx-right-arrow-alt"></i>Avatrs & Chips</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a class="has-arrow" href="javascript:;">
-							<div class="parent-icon"><i class="bx bx-lock"></i>
-							</div>
-							<div class="menu-title">Authentication</div>
-						</a>
-						<ul>
-							<li> <a href="authentication-signin.html" target="_blank"><i class="bx bx-right-arrow-alt"></i>Sign In</a>
-							</li>
-							<li> <a href="authentication-signup.html" target="_blank"><i class="bx bx-right-arrow-alt"></i>Sign Up</a>
-							</li>
-							<li> <a href="authentication-signin-with-header-footer.html" target="_blank"><i class="bx bx-right-arrow-alt"></i>Sign In with Header & Footer</a>
-							</li>
-							<li> <a href="authentication-signup-with-header-footer.html" target="_blank"><i class="bx bx-right-arrow-alt"></i>Sign Up with Header & Footer</a>
-							</li>
-							<li> <a href="authentication-forgot-password.html" target="_blank"><i class="bx bx-right-arrow-alt"></i>Forgot Password</a>
-							</li>
-							<li> <a href="authentication-reset-password.html" target="_blank"><i class="bx bx-right-arrow-alt"></i>Reset Password</a>
-							</li>
-							<li> <a href="authentication-lock-screen.html" target="_blank"><i class="bx bx-right-arrow-alt"></i>Lock Screen</a>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a class="has-arrow" href="javascript:;">
-							<div class="parent-icon icon-color-6"> <i class="bx bx-donate-blood"></i>
-							</div>
-							<div class="menu-title">Pages</div>
-						</a>
-						<ul>
-							<li> <a href="user-profile.html"><i class="bx bx-right-arrow-alt"></i>User Profile</a>
-							</li>
-							<li> <a href="timeline.html"><i class="bx bx-right-arrow-alt"></i>Timeline</a>
-							</li>
-							<li> <a href="pricing-table.html"><i class="bx bx-right-arrow-alt"></i>Pricing</a>
-							</li>
-							<li> <a class="has-arrow" href="javascript:;"><i class="bx bx-right-arrow-alt"></i>Errors</a>
-								<ul>
-									<li> <a href="errors-404-error.html"><i class="bx bx-right-arrow-alt"></i>404 Error</a>
-									</li>
-									<li> <a href="errors-500-error.html"><i class="bx bx-right-arrow-alt"></i>500 Error</a>
-									</li>
-									<li> <a href="errors-coming-soon.html"><i class="bx bx-right-arrow-alt"></i>Coming Soon</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
-					</li>
-					<li>
-						<a class="has-arrow" href="javascript:;">
-							<div class="parent-icon"><i class='bx bx-message-square-edit'></i>
-							</div>
-							<div class="menu-title">Forms</div>
-						</a>
-						<ul>
-							<li> <a href="form-elements.html"><i class="bx bx-right-arrow-alt"></i>Form Elements</a>
-							</li>
-							<li> <a href="form-input-group.html"><i class="bx bx-right-arrow-alt"></i>Input Groups</a>
-							</li>
-							<li> <a href="form-layouts.html"><i class="bx bx-right-arrow-alt"></i>Forms Layouts</a>
-							</li>
-							<li> <a href="form-validations.html"><i class="bx bx-right-arrow-alt"></i>Form Validation</a>
-							</li>
-							<li> <a href="form-wizard.html"><i class="bx bx-right-arrow-alt"></i>Form Wizard</a>
-							</li>
-							<li> <a href="form-text-editor.html"><i class="bx bx-right-arrow-alt"></i>Text Editor</a>
-							</li>
-							<li> <a href="form-file-upload.html"><i class="bx bx-right-arrow-alt"></i>File Upload</a>
-							</li>
-							<li> <a href="form-date-time-pickes.html"><i class="bx bx-right-arrow-alt"></i>Date Pickers</a>
-							</li>
-							<li> <a href="form-select2.html"><i class="bx bx-right-arrow-alt"></i>Select2</a>
-							</li>
-						</ul>
-					</li>
-                    --}}
-				</ul>
-			</nav>
-		</div>
-		<!--end navigation-->
 		<!--start page wrapper -->
 		<div class="page-wrapper">
-			<div class="page-content">
-				@yield('content')
-			</div>
+			<div class="page-content"></div>
 		</div>
 		<!--end page wrapper -->
 		<!--start overlay-->
@@ -647,23 +498,49 @@
 					</div>
 				</div>
 			</div>
+			<hr/>
+			<h6 class="mb-0">Sidebar Colors</h6>
+			<hr/>
+			<div class="header-colors-indigators">
+				<div class="row row-cols-auto g-3">
+					<div class="col">
+						<div class="indigator sidebarcolor1" id="sidebarcolor1"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor2" id="sidebarcolor2"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor3" id="sidebarcolor3"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor4" id="sidebarcolor4"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor5" id="sidebarcolor5"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor6" id="sidebarcolor6"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor7" id="sidebarcolor7"></div>
+					</div>
+					<div class="col">
+						<div class="indigator sidebarcolor8" id="sidebarcolor8"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 	<!--end switcher-->
-
-	@section('js')
-
-		<!-- Bootstrap JS -->
-		<script src="{{ url('') }}/assets/js/bootstrap.bundle.min.js"></script>
-		<!--plugins-->
-		<script src="{{ url('') }}/assets/js/jquery.min.js"></script>
-		<script src="{{ url('') }}/assets/plugins/simplebar/js/simplebar.min.js"></script>
-		<script src="{{ url('') }}/assets/plugins/metismenu/js/metisMenu.min.js"></script>
-		<script src="{{ url('') }}/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-		<!--app JS-->
-		<script src="{{ url('') }}/assets/js/app.js"></script>
-		@livewireScripts
-	@show
+	<!-- Bootstrap JS -->
+	<script src="{{ url('vertical') }}/assets/js/bootstrap.bundle.min.js"></script>
+	<!--plugins-->
+	<script src="{{ url('vertical') }}/assets/js/jquery.min.js"></script>
+	<script src="{{ url('vertical') }}/assets/plugins/simplebar/js/simplebar.min.js"></script>
+	<script src="{{ url('vertical') }}/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+	<script src="{{ url('vertical') }}/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+	<!--app JS-->
+	<script src="{{ url('vertical') }}/assets/js/app.js"></script>
 </body>
 
 </html>

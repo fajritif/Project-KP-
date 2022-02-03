@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\HoldingAuth;
 use App\HoldingAuth\HoldingAuth as HoldingAuthHoldingAuth;
 use App\Models\Company;
+use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
