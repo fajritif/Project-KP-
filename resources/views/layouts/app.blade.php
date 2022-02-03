@@ -14,16 +14,22 @@
 	<!-- loader-->
 	<link href="{{ url('vertical') }}/assets/css/pace.min.css" rel="stylesheet" />
 	<script src="{{ url('vertical') }}/assets/js/pace.min.js"></script>
-	<!-- Bootstrap CSS -->
-	<link href="{{ url('vertical') }}/assets/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-	<link href="{{ url('vertical') }}/assets/css/app.css" rel="stylesheet">
-	<link href="{{ url('vertical') }}/assets/css/icons.css" rel="stylesheet">
-	<!-- Theme Style CSS -->
-	<link rel="stylesheet" href="{{ url('vertical') }}/assets/css/dark-theme.css" />
-	<link rel="stylesheet" href="{{ url('vertical') }}/assets/css/semi-dark.css" />
-	<link rel="stylesheet" href="{{ url('vertical') }}/assets/css/header-colors.css" />
-	<title>Rocker - Bootstrap 5 Admin Dashboard Template</title>
+
+    @section('css')
+
+        <!-- Bootstrap CSS -->
+        <link href="{{ url('vertical') }}/assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+        <link href="{{ url('vertical') }}/assets/css/app.css" rel="stylesheet">
+        <link href="{{ url('vertical') }}/assets/css/icons.css" rel="stylesheet">
+        <!-- Theme Style CSS -->
+        <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/dark-theme.css" />
+        <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/semi-dark.css" />
+        <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/header-colors.css" />
+        <title>@yield('title', 'Millena')</title>
+
+        @livewireStyles
+	@show
 </head>
 
 <body>
@@ -60,18 +66,15 @@
                         </ul>
                     </li>
                 @endforeach
-                {{--
+                
 				<li>
-					<a href="javascript:;" class="">
+					<a href="#"  onclick="$('#logout_form').submit();" class="">
 						<div class="parent-icon"><i class='bx bx-log-out'></i>
 						</div>
 						<div class="menu-title">Logout</div>
 					</a>
-
-                    <button type="submit" form="logout_form" class="btn-link"><i class='bx bx-log-out-circle'></i><span>Logout</span></button>
-                    
 				</li>
-				--}}
+				
 			</ul>
 			<!--end navigation-->
 		</div>
@@ -423,7 +426,9 @@
 		<!--end header -->
 		<!--start page wrapper -->
 		<div class="page-wrapper">
-			<div class="page-content"></div>
+			<div class="page-content">
+				@yield('content')
+			</div>
 		</div>
 		<!--end page wrapper -->
 		<!--start overlay-->
@@ -532,15 +537,19 @@
 		</div>
 	</div>
 	<!--end switcher-->
-	<!-- Bootstrap JS -->
-	<script src="{{ url('vertical') }}/assets/js/bootstrap.bundle.min.js"></script>
-	<!--plugins-->
-	<script src="{{ url('vertical') }}/assets/js/jquery.min.js"></script>
-	<script src="{{ url('vertical') }}/assets/plugins/simplebar/js/simplebar.min.js"></script>
-	<script src="{{ url('vertical') }}/assets/plugins/metismenu/js/metisMenu.min.js"></script>
-	<script src="{{ url('vertical') }}/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-	<!--app JS-->
-	<script src="{{ url('vertical') }}/assets/js/app.js"></script>
+
+    @section('js')
+        <!-- Bootstrap JS -->
+        <script src="{{ url('vertical') }}/assets/js/bootstrap.bundle.min.js"></script>
+        <!--plugins-->
+        <script src="{{ url('vertical') }}/assets/js/jquery.min.js"></script>
+        <script src="{{ url('vertical') }}/assets/plugins/simplebar/js/simplebar.min.js"></script>
+        <script src="{{ url('vertical') }}/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+        <script src="{{ url('vertical') }}/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+        <!--app JS-->
+        <script src="{{ url('vertical') }}/assets/js/app.js"></script>
+        @livewireScripts
+    @show
 </body>
 
 </html>
