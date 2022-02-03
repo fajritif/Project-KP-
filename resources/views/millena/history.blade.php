@@ -27,8 +27,6 @@
 @section('js')
     @parent
     <script src="{{ url('assets/plugins/apexcharts-bundle/js/apexcharts.min.js') }}"></script>
-    <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts.js"></script>
-    <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
     <script>
         function drawLineChartHistory(seriesData, catData, yAxisTitle) {
             var options = {
@@ -63,8 +61,8 @@
                     categories: catData,
                 },
                 title: {
-                    text: 'Line Chart',
-                    align: 'left',
+                    text: 'Riwayat Tekanan',
+                    align: 'center',
                     style: {
                         fontSize: "16px",
                         color: '#666'
@@ -82,13 +80,17 @@
                         stops: [0, 100, 100, 100]
                     },
                 },
-                tooltip: { x: {
+                tooltip: {
+                    x: {
                         format: 'dd MMM hh:mm',
                         formatter: undefined,
                     },
                     y: {
-                        formatter: (value) => { return value + "Atm" },
-                    }, },
+                        formatter: (value) => {
+                            return value + "Atm"
+                        },
+                    },
+                },
                 markers: {
                     size: 4,
                     colors: ["#0A73BA"],
@@ -109,6 +111,44 @@
             chart.render();
         }
 
+        function drawWorkHourChart(dataSet) {
+            var options = {
+                series: [
+                    {
+                        data: dataSet
+                    }
+                ],
+                chart: {
+                    height: 150,
+                    type: 'rangeBar'
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true
+                    }
+                },
+                xaxis: {
+                    type: 'datetime'
+                },
+                title: {
+                    text: 'Riwayat Jam Jalan',
+                    align: 'center',
+                    style: {
+                        fontSize: "16px",
+                        color: '#666'
+                    }
+                },
+                tooltip: {
+                    x: {
+                        format: 'dd MMM hh:mm',
+                        formatter: undefined,
+                    }
+                }
+            };
+            var chart = new ApexCharts(document.querySelector("#chart2"), options);
+            chart.render();
+        }
+
         $(document).ready(function () {
             @php
                 $arrTemp = [];
@@ -119,6 +159,24 @@
             }
             @endphp
             drawLineChartHistory(@json($arrTemp, JSON_NUMERIC_CHECK), @json($arrCat), "Tekanan")
+            fetch('{{ url("api/history/work-hour/$deviceId?date=").app('request')->input('date') }}').then(function (response) {
+                return response.json()
+            }).then(function (data) {
+                const dataSet = []
+                data.forEach((element) => {
+                    let itemData = {
+                        x: "Jam Jalan",
+                        y: [
+                            new Date(element.TIME_START_FULL + ' GMT').getTime(),
+                            new Date(element.TIME_END_FULL + ' GMT').getTime()
+                        ]
+                    }
+                    dataSet.push(itemData)
+                })
+                if (dataSet.length > 0) {
+                    drawWorkHourChart(dataSet)
+                }
+            })
         })
     </script>
 @endsection

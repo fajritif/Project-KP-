@@ -88,4 +88,10 @@ class DeviceController extends Controller
         $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS 'EF01'");
         return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
     }
+
+    public function workhour(Request $request, $deviceId) {
+        $date = $date = $request->date ?: date('Y-m-d');
+        $data = DB::select("EXEC USP_GET_WORK_HOUR_BY_DEVICE '$deviceId', '$date'");
+        return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
+    }
 }

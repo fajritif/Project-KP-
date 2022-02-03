@@ -46,6 +46,7 @@ Route::get('/ptpn/pks/{pks}', [MillenaController::class, 'pks']);
 Route::prefix('api')->group(function () {
     Route::get('/company/{company}/pks', [CompanyController::class, 'pks']);
     Route::get('/device-per-pks/{pks}', [DeviceController::class, 'current']);
+    Route::get('/history/work-hour/{deviceId}', [DeviceController::class, 'workhour']);
     Route::resource('/company', CompanyController::class)->only(['index','show']);
     Route::resource('/pks', PksController::class)->only(['index','show']);
     Route::resource('/stasiun', StasiunController::class)->only(['index','show']);

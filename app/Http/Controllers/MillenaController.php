@@ -32,7 +32,7 @@ class MillenaController extends Controller
     {
         $date = $request->date ?: date('Y-m-d');
         $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE '$deviceId', '$date'");
-        return view('millena.history', compact('data'));
+        return view('millena.history', compact('data', 'deviceId'));
     }
 
     public function auth1()
