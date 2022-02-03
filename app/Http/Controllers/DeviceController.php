@@ -85,8 +85,14 @@ class DeviceController extends Controller
     }
 
     public function current($pks) {
-        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS 'EF01'");
+        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS $pks");
         return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
+    }
+
+    public function all_boiler(){
+        $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
+        return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
+
     }
 
     public function workhour(Request $request, $deviceId) {
