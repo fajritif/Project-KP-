@@ -41,11 +41,13 @@ Route::get('/ptpn/device/{deviceId}', [MillenaController::class, 'history']);
 //Route::get('/ptpn/{ptpn}', [MillenaController::class, 'anper']);
 Route::get('/ptpn/pks/{pks}', [MillenaController::class, 'pks']);
 //Route::get('/ptpn/{ptpn}/{pks}/history', [MillenaController::class, 'history']);
+Route::get('/holding', [MillenaController::class, 'holding']);
 
 
 Route::prefix('api')->group(function () {
     Route::get('/company/{company}/pks', [CompanyController::class, 'pks']);
     Route::get('/device-per-pks/{pks}', [DeviceController::class, 'current']);
+    Route::get('/latest-boiler', [DeviceController::class, 'all_boiler']);
     Route::resource('/company', CompanyController::class)->only(['index','show']);
     Route::resource('/pks', PksController::class)->only(['index','show']);
     Route::resource('/stasiun', StasiunController::class)->only(['index','show']);
