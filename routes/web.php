@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\MillenaController;
@@ -51,6 +52,7 @@ Route::prefix('api')->group(function () {
     Route::resource('/pks', PksController::class)->only(['index','show']);
     Route::resource('/stasiun', StasiunController::class)->only(['index','show']);
     Route::resource('/device', DeviceController::class)->only(['index','show']);
+    Route::post('/login', [AuthenticatedSessionController::class, 'api_login'] );
 });
 
 require __DIR__.'/auth.php';
