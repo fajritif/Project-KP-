@@ -34,9 +34,9 @@ class AuthServiceProvider extends ServiceProvider
             return new HoldingUserProvider;
         });        
 
-        Gate::define('view-company', function (HoldingAuth $user, Company $company) {
+        Gate::define('view-company', function (HoldingAuth $user, $company_code) {
             return 
-                $user->PTPN_ASAL === $company->KODE || 
+                $user->PTPN_ASAL === $company_code || 
                 $user->ROLEID == 'ADMIN_HOLDING' ||
                 $user->ROLEID == 'VIEWER_HOLDING';
         });   
