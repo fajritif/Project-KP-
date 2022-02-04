@@ -9,7 +9,10 @@
 <div class="row">
     <div class="col-xl-9 mx-auto">
         <h6 class="mb-0 text-uppercase">Tekanan Boiler All PTPN</h6>
+
         <hr/>
+
+
         <div class="card">
             <div class="card-body">
                 <div id="chart"></div>
@@ -25,16 +28,16 @@
     {{-- Tambahkan <script> disini --}}
         <script src="{{ url('') }}/assets/plugins/apexcharts-bundle/js/apexcharts.js"></script>
         <script>
-  const item=[]
-        $.getJSON('{{url('api/latest-boiler')}}', function(response) {
+//   const item=[]
+//         $.getJSON('{{url('api/latest-boiler')}}', function(response) {
 
-          console.log(response[0])  })
 
-        var options = {
 
-          series: [{name:item,data:item}]
+  //categories = categories.concat(item[x].NAMA_PTPN);
 
-        ,
+
+  var options = {
+          series: [],
           chart: {
           type: 'bar',
           height: 350
@@ -55,7 +58,7 @@
           colors: ['transparent']
         },
         xaxis: {
-          categories:[],
+          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
         },
         yaxis: {
           title: {
@@ -68,7 +71,7 @@
         tooltip: {
           y: {
             formatter: function (val) {
-              return "$ " + val + " thousands"
+              return "" + val + " atm"
             }
           }
         }
@@ -78,23 +81,19 @@
         chart.render();
 
 
-    //     chart.updateSeries([{
-
-    //       name: 'Sales',
-    //       data: item
-    //     }])
-    //   });
 
 
-    //   fetch('{{ url('api/latest-boiler') }}').then(function (response) {
-    //                 return response.json()
-    //             }).then(function (data) {
-    //                 data.forEach((element) => {
-    //                    console.log(element)
-    //                 })
-    //             })
+$.getJSON('{{url('api/latest-boiler')}}', function(response) {
+  console.log(response)
+  for (let x = 0; x < response.length; x++) {
+  chart.updateSeries([{
+    name: response[x].KETERANGAN,
+    data: [response[x].TEKANAN]
+  }])
+}
+});
 
-            </script>
+</script>
 
 @endsection
 
