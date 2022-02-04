@@ -26,7 +26,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('layouts.app', function($view){
-            $companies = Company::with('pks')->orderBy('NAMA')->get();
+            $companies = Company::with('pks')->orderBy('NAMA');
+            $companies = $companies->get();
+
             $companies = $companies->filter(function($company){
                 return $company->pks->count()>0;
             });

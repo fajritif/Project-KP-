@@ -20,13 +20,14 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return redirect('dashboard');
+    return redirect('ptpn');
 });
-
+/*
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
-
+*/
+/*
 Route::prefix('test')->group(function () {
     Route::get('/login', function () {
         return view('test.login');
@@ -36,14 +37,14 @@ Route::prefix('test')->group(function () {
     });
     Route::get('/auth1', [MillenaController::class, 'auth1']);
 });
+*/
 
-Route::get('/ptpn', [MillenaController::class, 'holding']);
-Route::get('/ptpn/device/{deviceId}', [MillenaController::class, 'history']);
-//Route::get('/ptpn/{ptpn}', [MillenaController::class, 'anper']);
-Route::get('/ptpn/pks/{pks}', [MillenaController::class, 'pks']);
-//Route::get('/ptpn/{ptpn}/{pks}/history', [MillenaController::class, 'history']);
-Route::get('/holding', [MillenaController::class, 'holding']);
-
+    Route::get('/ptpn', [MillenaController::class, 'holding'])->middleware(['auth']);
+    Route::get('/ptpn/device/{deviceId}', [MillenaController::class, 'history'])->middleware(['auth']);
+    //Route::get('/ptpn/{ptpn}', [MillenaController::class, 'anper']);
+    Route::get('/ptpn/pks/{pks}', [MillenaController::class, 'pks'])->middleware(['auth']);
+    //Route::get('/ptpn/{ptpn}/{pks}/history', [MillenaController::class, 'history']);
+    Route::get('/holding', [MillenaController::class, 'holding'])->middleware(['auth']);
 
 Route::prefix('api')->group(function () {
     Route::get('/company/{company}/pks', [CompanyController::class, 'pks']);

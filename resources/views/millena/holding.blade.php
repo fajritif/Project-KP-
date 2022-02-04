@@ -31,14 +31,7 @@
 //   const item=[]
 //         $.getJSON('{{url('api/latest-boiler')}}', function(response) {
 
-//                 }).then(function (data) {
 
-//                     data.forEach((element) => {
-//                        item.push(element)
-//                     })
-
-//                 })
-// console.log(item)
 
   //categories = categories.concat(item[x].NAMA_PTPN);
 

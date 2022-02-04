@@ -6,7 +6,9 @@ use App\HoldingAuth;
 use App\HoldingAuth\HoldingAuth as HoldingAuthHoldingAuth;
 use App\Models\Company;
 use App\Models\Device;
+use App\Models\Pks;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class MillenaController extends Controller
