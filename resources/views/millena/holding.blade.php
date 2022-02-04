@@ -9,7 +9,10 @@
 <div class="row">
     <div class="col-xl-9 mx-auto">
         <h6 class="mb-0 text-uppercase">Tekanan Boiler All PTPN</h6>
+
         <hr/>
+
+
         <div class="card">
             <div class="card-body">
                 <div id="chart"></div>
@@ -25,22 +28,23 @@
     {{-- Tambahkan <script> disini --}}
         <script src="{{ url('') }}/assets/plugins/apexcharts-bundle/js/apexcharts.js"></script>
         <script>
-  const item=[]
-        $.getJSON('{{url('api/latest-boiler')}}', function(response) {
+//   const item=[]
+//         $.getJSON('{{url('api/latest-boiler')}}', function(response) {
 
-                }).then(function (data) {
+//                 }).then(function (data) {
 
-                    data.forEach((element) => {
-                       item.push(element)
-                    })
+//                     data.forEach((element) => {
+//                        item.push(element)
+//                     })
 
-                })
-console.log(item.object[0])
-        var options = {
+//                 })
+// console.log(item)
 
-          series: [{name:item,data:item}]
+  //categories = categories.concat(item[x].NAMA_PTPN);
 
-        ,
+
+  var options = {
+          series: [],
           chart: {
           type: 'bar',
           height: 350
@@ -61,7 +65,7 @@ console.log(item.object[0])
           colors: ['transparent']
         },
         xaxis: {
-          categories:[],
+          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
         },
         yaxis: {
           title: {
@@ -74,7 +78,7 @@ console.log(item.object[0])
         tooltip: {
           y: {
             formatter: function (val) {
-              return "$ " + val + " thousands"
+              return "" + val + " atm"
             }
           }
         }
@@ -82,25 +86,22 @@ console.log(item.object[0])
 
         var chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
+$.getJSON('{{url('api/latest-boiler')}}', function(response) {
+  console.log(response)
+  for (let x = 0; x < response.length; x++) {
+  chart.updateSeries([{
+    name: response[x].KETERANGAN,
+    data: response[x].TEKANAN
+  }]),
+  console.log(response[x].TEKANAN)
+}
+});
 
 
-    //     chart.updateSeries([{
-
-    //       name: 'Sales',
-    //       data: item
-    //     }])
-    //   });
 
 
-    //   fetch('{{ url('api/latest-boiler') }}').then(function (response) {
-    //                 return response.json()
-    //             }).then(function (data) {
-    //                 data.forEach((element) => {
-    //                    console.log(element)
-    //                 })
-    //             })
 
-            </script>
+</script>
 
 @endsection
 
