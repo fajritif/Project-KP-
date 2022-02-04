@@ -15,7 +15,10 @@ class MillenaController extends Controller
 {
     public function holding()
     {
+        //   $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
+        // return view('holding',compact('data'));
         return view('millena.holding');
+
     }
 
     public function anper(Company $ptpn)
