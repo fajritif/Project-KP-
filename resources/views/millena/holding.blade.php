@@ -36,8 +36,10 @@
   //categories = categories.concat(item[x].NAMA_PTPN);
 
 
+
+function chartData(dataset,category){
   var options = {
-          series: [],
+          series: dataset,
           chart: {
           type: 'bar',
           height: 350
@@ -58,7 +60,7 @@
           colors: ['transparent']
         },
         xaxis: {
-          categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+          categories: category,
         },
         yaxis: {
           title: {
@@ -79,19 +81,38 @@
 
         var chart = new ApexCharts(document.querySelector("#chart"), options);
         chart.render();
-$.getJSON('{{url('api/latest-boiler')}}', function(response) {
-  console.log(response)
-  for (let x = 0; x < response.length; x++) {
-  chart.updateSeries([{
-    name: response[x].KETERANGAN,
-    data: [response[x].TEKANAN]
-  }]),
-  console.log(response[x].TEKANAN)
+
 }
-});
+// $.getJSON('{{url('api/latest-boiler')}}', function(response) {
+//   console.log(response)
+//   for (let x = 0; x < response.length; x++) {
+//   chart.updateSeries([{
+//     name: response[x].KETERANGAN,
+//     data: [response[x].TEKANAN]
+//   }]),
+//   console.log(response[x].TEKANAN)
+// }
+// });
+$.getJSON('{{url('api/latest-boiler')}}', function(response) {
+                const dataSet = []
+                const category=[]
 
+                response.forEach((element) => {
+                    let itemData = {
+                        name: element.KETERANGAN,
+                        data: [
+                            element.TEKANAN
+                        ]
+                    }
 
+                    dataSet.push(itemData)
+                    category.push(element.NAMA_PTPN)
 
+                })
+                if (dataSet.length > 0) {
+                    chartData(dataSet,category)
+                }
+            })
 
 
 </script>
