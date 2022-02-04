@@ -49,7 +49,9 @@
 			</div>
 			<!--navigation-->
 			<ul class="metismenu" id="menu">
+				{{-- $companies diambil di app\Providers\AppServiceProvider.php --}}
                 @foreach($companies as $company)
+					@can('view-company', $company)
                     <li> 
                         <a href="#" class="has-arrow">
                             <div class="parent-icon">
@@ -65,6 +67,7 @@
                             @endforeach
                         </ul>
                     </li>
+					@endcan
                 @endforeach
                 
 				<li>

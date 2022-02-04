@@ -28,14 +28,8 @@
   const item=[]
         $.getJSON('{{url('api/latest-boiler')}}', function(response) {
 
-                }).then(function (data) {
+          console.log(response[0])  })
 
-                    data.forEach((element) => {
-                       item.push(element)
-                    })
-
-                })
-console.log(item.object[0])
         var options = {
 
           series: [{name:item,data:item}]
