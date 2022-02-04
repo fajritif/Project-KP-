@@ -13,6 +13,7 @@ class Pks extends Model
     protected $table='M_PKS';
     protected $primaryKey = 'KODE';
     protected $keyType = 'string';
+    protected $appends = ['nama2'];
 
     public function getNama2Attribute()
     {
