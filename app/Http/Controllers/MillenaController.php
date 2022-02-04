@@ -10,11 +10,17 @@ use App\Models\Pks;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class MillenaController extends Controller
 {
     public function holding()
     {
+        if (! Gate::allows('view-all')) {
+            $pks = Pks::where('COMPANY_CODE', auth()->user()->PTPN_ASAL)->first();
+            return redirect('ptpn/pks/'.$pks->KODE);
+        }
+
         //   $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
         // return view('holding',compact('data'));
         return view('millena.holding');
@@ -27,9 +33,11 @@ class MillenaController extends Controller
         //return view('millena.anper');
     }
 
-    public function pks($pks)
+    public function pks(Pks $pks)
     {
-        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS '$pks'");
+        $this->authorize('view-company', $pks->COMPANY_CODE);
+            
+        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS '$pks->KODE'");
         return view('millena.pks', compact('data'));
     }
 
