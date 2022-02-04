@@ -31,14 +31,7 @@
 //   const item=[]
 //         $.getJSON('{{url('api/latest-boiler')}}', function(response) {
 
-//                 }).then(function (data) {
 
-//                     data.forEach((element) => {
-//                        item.push(element)
-//                     })
-
-//                 })
-// console.log(item)
 
   //categories = categories.concat(item[x].NAMA_PTPN);
 
@@ -91,21 +84,14 @@ $.getJSON('{{url('api/latest-boiler')}}', function(response) {
   for (let x = 0; x < response.length; x++) {
   chart.updateSeries([{
     name: response[x].KETERANGAN,
-    data: response[x].TEKANAN
+    data: [response[x].TEKANAN]
   }]),
   console.log(response[x].TEKANAN)
 }
 });
 
-$.getJSON('{{url('api/latest-boiler')}}', function(response) {
-  console.log(response)
-  for (let x = 0; x < response.length; x++) {
-  chart.updateSeries([{
-    name: response[x].KETERANGAN,
-    data: [response[x].TEKANAN]
-  }])
-}
-});
+
+
 
 
 </script>
