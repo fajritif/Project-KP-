@@ -97,8 +97,15 @@ $.getJSON('{{url('api/latest-boiler')}}', function(response) {
 }
 });
 
-
-
+$.getJSON('{{url('api/latest-boiler')}}', function(response) {
+  console.log(response)
+  for (let x = 0; x < response.length; x++) {
+  chart.updateSeries([{
+    name: response[x].KETERANGAN,
+    data: [response[x].TEKANAN]
+  }])
+}
+});
 
 
 </script>

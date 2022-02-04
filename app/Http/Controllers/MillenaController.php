@@ -13,7 +13,10 @@ class MillenaController extends Controller
 {
     public function holding()
     {
+        //   $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
+        // return view('holding',compact('data'));
         return view('millena.holding');
+
     }
 
     public function anper(Company $ptpn)
@@ -28,9 +31,11 @@ class MillenaController extends Controller
         return view('millena.pks', compact('data'));
     }
 
-    public function history($deviceId)
+    public function history(Request $request, $deviceId)
     {
-        return view('millena.history');
+        $date = $request->date ?: date('Y-m-d');
+        $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE '$deviceId', '$date'");
+        return view('millena.history', compact('data', 'deviceId'));
     }
 
     public function auth1()
