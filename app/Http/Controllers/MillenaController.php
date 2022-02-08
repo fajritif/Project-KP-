@@ -38,6 +38,7 @@ class MillenaController extends Controller
         $this->authorize('view-company', $pks->COMPANY_CODE);
 
         $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS '$pks->KODE'");
+        $pks = $pks->KODE;
         return view('millena.pks', compact('data', 'pks'));
     }
 
