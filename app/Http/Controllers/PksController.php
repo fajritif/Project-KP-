@@ -87,8 +87,7 @@ class PksController extends Controller
     {
         $pkss = Pks::where('COMPANY_CODE', $company_code)->get();
         $pkss->load('company');
-        $pkss->append('nama_company');
-        $pkss->append('nama_company_panjang');
+        $pkss->append(['nama_company', 'nama_company_panjang']);
         //dump($pkss->toArray()); return '';
         return response()->json($pkss);
     }
