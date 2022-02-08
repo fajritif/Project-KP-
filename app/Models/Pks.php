@@ -32,7 +32,7 @@ class Pks extends Model
 
     public function getNamaCompanyPanjangAttribute()
     {
-        return Str::of($this->company->NAMA)->replace('PTPN','PT Perkebunan Nusantara');
+        return $this->company->nama_panjang;
     }
 
 }

@@ -172,17 +172,16 @@
                 drawGaugeChart(
                     '{{ $item->DEVICE_ID }}',
                     '{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}',
-                    {{ $item->TEMPERATURE }},
+                    {{ round($item->PRESSURE, 2) }},
                     '{{ $fDate ?: "" }}'
                 )
             @endforeach
             setInterval(function () {
-                fetch('{{ url('api/device-per-pks/EF01') }}').then(function (response) {
+                fetch('{{ url('api/device-per-pks/'.$pks) }}').then(function (response) {
                     return response.json()
                 }).then(function (data) {
                     data.forEach((element) => {
-                        //arrGauge[element.DEVICE_ID].series[0].points[0].update(Math.round(element.TEMPERATURE*100)/100)
-                        arrGauge[element.DEVICE_ID].series[0].points[0].update(Math.round(Math.random() * 25 * 100) / 100)
+                        arrGauge[element.DEVICE_ID].series[0].points[0].update(Math.round(element.PRESSURE*100)/100)
                     })
                 })
             }, 3000)

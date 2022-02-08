@@ -51,9 +51,14 @@
 			<ul class="metismenu" id="menu">
 				{{-- $companies diambil di app\Providers\AppServiceProvider.php --}}
                 @foreach($companies as $company)
-					@can('view-company', $company)
                     <li> 
-                        <a href="#" class="has-arrow">
+                        <a href="#"
+						@cannot('view-all')
+							aria-expanded="true" aria-disabled="true"
+						@else
+							class="has-arrow" 
+						@endcannot						
+						>
                             <div class="parent-icon">
                                 {{-- <i class='bx bxs-buildings'></i> --}}
                                 <img src="{{ url($company->IMAGE) }}" alt="" height="28">
@@ -67,7 +72,6 @@
                             @endforeach
                         </ul>
                     </li>
-					@endcan
                 @endforeach
                 
 				<li>
