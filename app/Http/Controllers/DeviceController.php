@@ -100,4 +100,10 @@ class DeviceController extends Controller
         $data = DB::select("EXEC USP_GET_WORK_HOUR_BY_DEVICE '$deviceId', '$date'");
         return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
     }
+
+    public function indicator(Request $request, $deviceId) {
+        $date = $date = $request->date ?: date('Y-m-d');
+        $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE '$deviceId', '$date'");
+        return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
+    }
 }
