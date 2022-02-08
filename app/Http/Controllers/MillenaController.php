@@ -16,11 +16,9 @@ class MillenaController extends Controller
 {
     public function holding()
     {
-<<<<<<< HEAD
           $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
         return view('millena.holding',compact('data'));
        // return view('millena.holding');
-=======
         if (! Gate::allows('view-all')) {
             $pks = Pks::where('COMPANY_CODE', auth()->user()->PTPN_ASAL)->first();
             return redirect('ptpn/pks/'.$pks->KODE);
@@ -29,7 +27,6 @@ class MillenaController extends Controller
         //   $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
         // return view('holding',compact('data'));
         return view('millena.holding');
->>>>>>> main
 
     }
 
