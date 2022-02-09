@@ -53,14 +53,17 @@ class MillenaController extends Controller
         $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE '$deviceId', '$date'");
         $deviceList = DB::select("EXEC USP_GET_DEVICE_BY_PKS '$kodePks'");
         $getDetail = DB::select("EXEC USP_GET_DETAIL_DEVICE '$deviceId'");
+        $totalWorkHour = DB::select("EXEC USP_GET_TOTAL_WORK_HOUR '$deviceId', '$date'");
         $detail = (object) [
             'NAMA_COMPANY' => '',
-            'NAMA_PKS' => ''
+            'NAMA_PKS' => '',
+            'KODE_STASIUN' => '',
+            'TITLE_PAGE' => ''
         ];
         if (count($getDetail) > 0) {
             $detail = $getDetail[0];
         }
-        return view('millena.history', compact('data', 'deviceId', 'deviceList', 'detail'));
+        return view('millena.history', compact('data', 'deviceId', 'deviceList', 'detail', 'totalWorkHour'));
     }
 
     public function auth1()

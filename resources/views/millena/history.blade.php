@@ -3,8 +3,8 @@
 @section('css')
     @parent
     {{-- Tambahkan <style> disini --}}
-    <link href="{{ url('vertical') }}/assets/plugins/datetimepicker/css/classic.css" rel="stylesheet" />
-    <link href="{{ url('vertical') }}/assets/plugins/datetimepicker/css/classic.date.css" rel="stylesheet" />
+    <link href="{{ url('vertical') }}/assets/plugins/datetimepicker/css/classic.css" rel="stylesheet"/>
+    <link href="{{ url('vertical') }}/assets/plugins/datetimepicker/css/classic.date.css" rel="stylesheet"/>
 @endsection
 
 @section('content')
@@ -19,14 +19,16 @@
                         <div class="row row-cols-md-auto g-lg-3">
                             <label for="date_history" class="col-md-2 col-form-label text-md-end">Tanggal</label>
                             <div class="col-md-3">
-                                <input type="text" class="form-control datepicker" name="date_history" id="date_history"/>
+                                <input type="text" class="form-control datepicker" name="date_history"
+                                       id="date_history"/>
                             </div>
                             <label for="selectDeviceId" class="col-md-2 col-form-label text-md-end">Device ID</label>
                             <div class="col-md-5">
                                 <select id="selectDeviceId" class="form-select">
                                     <option value="">- Pilih Device -</option>
                                     @foreach($deviceList as $itemList)
-                                        <option value="{{ $itemList->KODE_DEVICE }}" @if($deviceId == $itemList->KODE_DEVICE) selected @endif>{{ $itemList->KETERANGAN }}</option>
+                                        <option value="{{ $itemList->KODE_DEVICE }}"
+                                                @if($deviceId == $itemList->KODE_DEVICE) selected @endif>{{ $itemList->KETERANGAN }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -41,11 +43,28 @@
             <div id="chart1"></div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-body">
-            <div id="chart2"></div>
+    <div class="row">
+        <div class="col-12 col-lg-9 col-xl-9">
+            <div class="card radius-10">
+                <div class="card-body">
+                    <div id="chart2"></div>
+                </div>
+            </div>
         </div>
-    </div>
+        <div class="col-12 col-lg-3 col-xl-3">
+            <div class="card radius-10">
+                <div class="card-body">
+                    <div class="align-items-center">
+                        <h4 class="mb-0 text-center">Total Jam Jalan</h4>
+                    </div>
+                    <div class="mt-1">
+                        <h2 class="mb-0 text-center" style="font-size: 6rem">{{ $totalWorkHour[0]->TOTAL }}</h2>
+                        <h6 class="mb-0 text-center">Jam</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!--end row-->
 @endsection
 
 @section('js')
@@ -79,7 +98,7 @@
                         enabled: false
                     },
                     toolbar: {
-                        show: true
+                        show: false
                     },
                     dropShadow: {
                         enabled: true,
@@ -98,7 +117,7 @@
                     categories: catData,
                 },
                 title: {
-                    text: 'Riwayat Tekanan',
+                    text: 'Riwayat '+yAxisTitle,
                     align: 'center',
                     style: {
                         fontSize: "16px",
@@ -157,7 +176,10 @@
                 ],
                 chart: {
                     height: 150,
-                    type: 'rangeBar'
+                    type: 'rangeBar',
+                    toolbar: {
+                        show: false
+                    }
                 },
                 plotOptions: {
                     bar: {
@@ -177,7 +199,7 @@
                 },
                 tooltip: {
                     x: {
-                        format: 'dd MMM hh:mm',
+                        format: 'dd MMM HH:mm',
                         formatter: undefined,
                     }
                 }
@@ -191,11 +213,30 @@
                 $arrTemp = [];
                 $arrCat = [];
             foreach ($data as $item) {
-                $arrTemp[] = random_int(10.00, 25.00);//$item->TEMPERATURE;
+                switch ($detail->KODE_STASIUN) {
+                    case "BPV":
+                    case "PRS":
+                    case "RBS":
+                    case "TRB":
+                    case "BLR":
+                        $arrTemp[] = $item->PRESSURE;
+                        break;
+                    case "CBC":
+                    case "CST":
+                    case "DIG":
+                    case "FED":
+                    case "GEN":
+                    $arrTemp[] = $item->TEMPERATURE;
+                        break;
+                    case "WTP":
+                    $arrTemp[] = $item->PH;
+                        break;
+                    }
+                //$arrTemp[] = $item->TEMPERATURE;//random_int(10.00, 25.00);
                 $arrCat[] = $item->TANGGAL.' GMT';
             }
             @endphp
-            drawLineChartHistory(@json($arrTemp, JSON_NUMERIC_CHECK), @json($arrCat), "Tekanan")
+            drawLineChartHistory(@json($arrTemp, JSON_NUMERIC_CHECK), @json($arrCat), "{{ $detail->TITLE_PAGE }}")
             fetch('{{ url("api/history/work-hour/$deviceId?date=").app('request')->input('date') }}').then(function (response) {
                 return response.json()
             }).then(function (data) {
@@ -210,9 +251,13 @@
                     }
                     dataSet.push(itemData)
                 })
-                if (dataSet.length > 0) {
-                    drawWorkHourChart(dataSet)
+                if (dataSet.length <= 0) {
+                    dataSet.push({
+                        x: "Jam Jalan",
+                        y: [0,0]
+                    })
                 }
+                drawWorkHourChart(dataSet)
             })
         })
     </script>
@@ -229,7 +274,7 @@
         })
 
         function refreshData() {
-            window.location.href = "{{ url('/ptpn/device') }}/"+selectedDeviceId+"?date="+selectedDate;
+            window.location.href = "{{ url('/ptpn/device') }}/" + selectedDeviceId + "?date=" + selectedDate;
         }
     </script>
 @endsection
