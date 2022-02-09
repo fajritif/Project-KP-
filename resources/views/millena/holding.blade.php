@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-xl-9 mx-auto">
+        <div class="col-xl-12 mx-auto">
             <h6 class="mb-0 text-uppercase">Tekanan Boiler All PTPN</h6>
 
             <hr />
@@ -64,46 +64,47 @@
 
                 //   }
 
-// setInterval(function() {
+                setInterval(function() {
 
 
-                $.getJSON('{{ url('api/latest-boiler') }}', function(response) {
+                    $.getJSON('{{ url('api/latest-boiler') }}', function(response) {
 
-                    let mydata = []
-                    let latest = []
-                    for (let i = 0; i < response.length; i++) {
+                        let mydata = []
+                        let latest = []
+                        for (let i = 0; i < response.length; i++) {
 
-                        mydata.push({
-                            x: response[i].NAMA + '(' + response[i].KETERANGAN + ')' + response[i].LATEST,
-                            y: response[i].PRESSURE.toFixed(2),
-                            goals: [{
-                                name: 'Minimal',
-                                value: 17,
-                                strokeHeight: 5,
-                                strokeColor: '#775DD0'
-                            }],
+                            mydata.push({
+                                x:  response[i].NAMA_PKS+ '('+response[i].KETERANGAN+')',
+                                y: response[i].PRESSURE.toFixed(2),
+                                goals: [{
+                                    name: 'Minimal',
+                                    value: 17,
+                                    strokeHeight: 5,
+                                    strokeColor: '#775DD0'
+                                }],
 
-                        })
-                        latest.push(
-                            response[i].LATEST
+                            })
+                            latest.push(
+                                response[i].LATEST
 
-                        )
-                    }
-                    console.log(latest)
-                    chartdata(mydata)
+                            )
+                        }
+                        console.log(latest)
+                        updateChart(mydata)
 
-                })
-           // }, 3000);
+                    })
+                }, 3000);
 
                 function chartdata(mydata) {
 
                     var options = {
-                        series: [{
-                            name: 'Actual',
-                            data: mydata
-                        }],
+                        series: [
+                            // {
+                            // name: 'Actual',
+                            // data: mydata}
+                        ],
                         chart: {
-                            height: 700,
+                            height: 350,
                             type: 'bar'
                         },
                         plotOptions: {
@@ -129,7 +130,7 @@
                                 show: true,
                                 style: {
 
-                                    fontSize: '5px',
+                                    fontSize: '8px',
                                     fontFamily: 'Helvetica, Arial, sans-serif',
                                     fontWeight: 400,
                                     cssClass: 'apexcharts-xaxis-label',
@@ -150,7 +151,19 @@
                     };
                     var chart = new ApexCharts(document.querySelector("#chart"), options);
                     chart.render();
+                    return chart;
                 }
+                let chartItem = chartdata(null)
+
+                function updateChart(mydata) {
+                    chartItem.updateSeries([{
+                            name: 'Actual',
+                            data: mydata
+
+                        }]
+                    )
+                }
+
 
 
 
