@@ -20,7 +20,7 @@ class MillenaController extends Controller
         return view('millena.holding',compact('data'));
        // return view('millena.holding');
         if (! Gate::allows('view-all')) {
-            $pks = Pks::where('COMPANY_CODE', auth()->user()->PTPN_ASAL)->first();
+            $pks = Pks::where('COMPANY_CODE', auth()->user()->PTPN)->first();
             return redirect('ptpn/pks/'.$pks->KODE);
         }
 
@@ -67,24 +67,5 @@ class MillenaController extends Controller
             $detail = $getDetail[0];
         }
         return view('millena.history', compact('data', 'deviceId', 'deviceList', 'detail', 'totalWorkHour'));
-    }
-
-    public function auth1()
-    {
-        $data = DB::select("exec USP_GET_USER_BY_NIK_SAP '5013097'"); // ambil data pertama saja
-        if(count($data) >0){
-            return true;
-        }else{
-            return false;
-        }
-
-        $data = DB::select("exec USP_GET_USER_BY_NIK_SAP '5013097'")[0]; // ambil data pertama saja
-        $user = new HoldingAuth;
-        foreach($data as $key=>$value){
-            $user->$key = $value;
-        }
-        dump($user);
-        dump($user->getAuthIdentifier());
-        dd($user->getAuthIdentifierName());
     }
 }

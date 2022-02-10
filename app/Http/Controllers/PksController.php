@@ -14,7 +14,8 @@ class PksController extends Controller
      */
     public function index()
     {
-        //
+        $pkss = Pks::all();
+        return response()->json($pkss);
     }
 
     /**
