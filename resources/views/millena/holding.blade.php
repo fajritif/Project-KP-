@@ -89,7 +89,7 @@
 
                             )
                         }
-                        console.log(latest)
+
                         updateChart(mydata)
 
                     })
