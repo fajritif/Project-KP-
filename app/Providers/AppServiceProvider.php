@@ -27,18 +27,27 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         View::composer('layouts.app', function($view){
-            $companies = Company::with('pks')->orderBy('NAMA');
 
-            // Pengaturan gate (hak akses) ada di app/Providers/AuthServiceProvider.php
-            if (! Gate::allows('view-all')) {
-                $companies = $companies->where('KODE', auth()->user()->PTPN_ASAL);
-            }
+                $companies = Company::with('pks')->orderBy('NAMA');
 
-            $companies = $companies->get();
+                // Pengaturan gate (hak akses) ada di app/Providers/AuthServiceProvider.php
+                if (! Gate::allows('view-all')) {
+                    $companies = $companies->where('KODE', auth()->user()->PTPN);
+                    
+                    $companies = cache()->remember('companies-holding', 600, function () use ($companies) {
+                        return $companies->get();
+                    });
+                }else{
+                    $companies = cache()->remember('companies-anper', 600, function () use ($companies) {
+                        return $companies->get();
+                    });
+                }
+    
+    
+                $companies = $companies->filter(function($company){
+                    return $company->pks->count()>0;
+                });
 
-            $companies = $companies->filter(function($company){
-                return $company->pks->count()>0;
-            });
             $view->with('companies',$companies);
         });
     }

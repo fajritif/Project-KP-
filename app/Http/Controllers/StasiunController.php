@@ -14,7 +14,8 @@ class StasiunController extends Controller
      */
     public function index()
     {
-        //
+        $stasiun = Stasiun::all();
+        return response()->json($stasiun);
     }
 
     /**

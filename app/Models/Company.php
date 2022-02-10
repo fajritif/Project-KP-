@@ -16,8 +16,12 @@ class Company extends Model
     protected $appends = ['nama_panjang'];
 
     public function pks(){
-        return $this->hasMany(Pks::class, 'COMPANY_CODE')->where('NAMA','LIKE','%PKS%')
-            ->orWhere('NAMA','LIKE','%SAWIT%');
+        return $this->hasMany(Pks::class, 'COMPANY_CODE')
+            ->where(function($query){
+                $query->where('NAMA','LIKE','%PKS%')
+                ->orWhere('NAMA','LIKE','%SAWIT%');
+            });
+            
     }    
 
     public function getNamaPanjangAttribute()
