@@ -35,7 +35,6 @@ Route::prefix('test')->group(function () {
     Route::get('/home', function () {
         return view('layouts.app');
     });
-    Route::get('/auth1', [MillenaController::class, 'auth1']);
 });
 */
 
@@ -56,7 +55,6 @@ Route::prefix('api')->group(function () {
     Route::resource('/company', CompanyController::class)->only(['index','show']);
     Route::resource('/pks', PksController::class)->only(['index','show']);
     Route::resource('/stasiun', StasiunController::class)->only(['index','show']);
-    Route::resource('/device', DeviceController::class)->only(['index','show']);
     Route::post('/login', [AuthenticatedSessionController::class, 'api_login'] );
 });
 
