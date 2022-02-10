@@ -41,7 +41,7 @@
             window.location.href = '{{ url("ptpn/device/") }}/'+deviceId
         }
 
-        function drawGaugeChart(chartId, lastUpdateId, temperature, lastUpdate) {
+        function drawGaugeChart(chartId, lastUpdateId, dataValue, lastUpdate, gaugeTitle, gaugeSatuan, standartBlock) {
             if (lastUpdate) {
                 document.getElementById(lastUpdateId).textContent = "Last Update "+lastUpdate;
             } else {
@@ -98,7 +98,7 @@
                     // the value axis
                     yAxis: {
                         min: 0,
-                        max: 25,
+                        max: standartBlock[2],
 
                         minorTickInterval: 'auto',
                         minorTickWidth: 1,
@@ -116,27 +116,27 @@
                             rotation: 'auto'
                         },
                         title: {
-                            text: 'Atm'
+                            text: gaugeSatuan
                         },
                         plotBands: [{
                             from: 0,
-                            to: 10,
+                            to: standartBlock[0],
                             color: '#DF5353' // red
                         }, {
-                            from: 10,
-                            to: 17,
+                            from: standartBlock[0],
+                            to: standartBlock[1],
                             color: '#DDDF0D' // yellow
                         }, {
-                            from: 17,
-                            to: 25,
+                            from: standartBlock[1],
+                            to: standartBlock[2],
                             color: '#55BF3B' // green
                         }]
                     },
                     series: [{
-                        name: 'Tekanan',
-                        data: [temperature],
+                        name: gaugeTitle,
+                        data: [dataValue],
                         tooltip: {
-                            valueSuffix: ' atm'
+                            valueSuffix: gaugeSatuan
                         }
                     }],
                 },
@@ -166,23 +166,55 @@
             @foreach($data as $item)
                 @php
                 $fDate = null;
+                $valData = 0;
+                $standartBlock = [10,17,25];
+                if(preg_match('(BLR|BPV|PRS|RBS|TRB)', $item->DEVICE_ID) === 1) {
+                    $valData = round($item->PRESSURE, 2);
+                }
+                if(preg_match('(CST|DIG|FED|GEN)', $item->DEVICE_ID) === 1) {
+                    $valData = round($item->TEMPERATURE, 2);
+                    $standartBlock = [80,110, 150];
+                }
+                if(false !== strpos($item->DEVICE_ID, "WTP")) {
+                    $valData = round($item->PH, 2);
+                    $standartBlock = [4,8,14];
+                }
+                if(false !== strpos($item->DEVICE_ID, "CBC")) {
+                    $valData = round($item->ARUS, 2);
+                    $standartBlock = [4,7,15];
+                }
                 if ($item->TANGGAL != null) { $fDate = date('d M Y H:i:s', strtotime($item->TANGGAL)); }
                 @endphp
                 arrGauge["{{ $item->DEVICE_ID  }}"] =
                 drawGaugeChart(
                     '{{ $item->DEVICE_ID }}',
                     '{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}',
-                    {{ $item->TEMPERATURE }},
-                    '{{ $fDate ?: "" }}'
+                    {{ $valData }},
+                    '{{ $fDate ?: "" }}',
+                    '{{ $item->TITLE_PAGE }}',
+                    '{{ $item->SATUAN }}',
+                    @json($standartBlock)
                 )
             @endforeach
             setInterval(function () {
-                fetch('{{ url('api/device-per-pks/EF01') }}').then(function (response) {
+                fetch('{{ url('api/device-per-pks/'.$pks) }}').then(function (response) {
                     return response.json()
                 }).then(function (data) {
                     data.forEach((element) => {
-                        //arrGauge[element.DEVICE_ID].series[0].points[0].update(Math.round(element.TEMPERATURE*100)/100)
-                        arrGauge[element.DEVICE_ID].series[0].points[0].update(Math.round(Math.random() * 25 * 100) / 100)
+                        let dataVal = 0;
+                        if(element.DEVICE_ID.match(/BLR|BPV|PRS|RBS|TRB/)) {
+                            dataVal = Math.round(element.PRESSURE*100)/100
+                        }
+                        if(element.DEVICE_ID.match(/CST|DIG|FED|GEN/)) {
+                            dataVal = Math.round(element.TEMPERATURE*100)/100
+                        }
+                        if(element.DEVICE_ID.match(/WTP/)) {
+                            dataVal = Math.round(element.PH*100)/100
+                        }
+                        if(element.DEVICE_ID.match(/CBC/)) {
+                            dataVal = Math.round(element.ARUS*100)/100
+                        }
+                        arrGauge[element.DEVICE_ID].series[0].points[0].update(dataVal)
                     })
                 })
             }, 3000)
