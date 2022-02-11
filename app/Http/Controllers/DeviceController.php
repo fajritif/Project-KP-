@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use DataTable;
+use stdClass;
 
 class DeviceController extends Controller
 {
@@ -15,7 +17,18 @@ class DeviceController extends Controller
      */
     public function index()
     {
-        //
+        //$devices = Device::all();
+        //dd($devices->first()->toArray());
+
+        return view('device.index');
+    }
+
+    public function api_index()
+    {
+        $devices = Device::all();
+        //dd($devices->first()->toArray());
+
+        return response()->json($devices);
     }
 
     /**
@@ -36,7 +49,28 @@ class DeviceController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $response = new stdClass();
+
+        $device = Device::find($request->kode_device);
+
+        if($device == null){
+
+            $device = Device::create([
+                "COMPANY_CODE" => $request->company,
+                "KODE_PKS" => $request->pks,
+                "KODE_STASIUN" => $request->stasiun,
+                "KODE_DEVICE" => $request->kode_device,
+                "KETERANGAN" => $request->keterangan
+            ]);
+            $device->KODE_DEVICE = $request->kode_device;
+
+            $response->status = true;
+            $response->data = $device;
+        }else{
+            $response->status = false;
+            $response->message = "Device dengan kode ".$request->kode_device." sudah ada!";
+        }
+        return response()->json($response);
     }
 
     /**
@@ -47,7 +81,7 @@ class DeviceController extends Controller
      */
     public function show(Device $device)
     {
-        //
+        dump($device);
     }
 
     /**
@@ -58,7 +92,6 @@ class DeviceController extends Controller
      */
     public function edit(Device $device)
     {
-        //
     }
 
     /**
@@ -70,7 +103,15 @@ class DeviceController extends Controller
      */
     public function update(Request $request, Device $device)
     {
-        //
+        $device->IS_ACTIVE = $request->IS_ACTIVE;
+        $device->save();
+
+        $response = new stdClass();
+
+        $response->status = true;
+        $response->data = $device;
+
+        return response()->json($response);
     }
 
     /**
