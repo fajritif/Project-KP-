@@ -44,6 +44,8 @@ Route::prefix('test')->group(function () {
     Route::get('/ptpn/pks/{pks}', [MillenaController::class, 'pks'])->middleware(['auth']);
     //Route::get('/ptpn/{ptpn}/{pks}/history', [MillenaController::class, 'history']);
     Route::get('/holding', [MillenaController::class, 'holding'])->middleware(['auth']);
+    Route::get('/admin/device/index-ajax', [MillenaController::class, 'index_ajax'])->middleware(['auth']);
+    Route::resource('/admin/device', DeviceController::class)->middleware(['auth']);
 
 Route::prefix('api')->group(function () {
     Route::get('/company/{company}/pks', [CompanyController::class, 'pks']);
@@ -52,6 +54,7 @@ Route::prefix('api')->group(function () {
     Route::get('/pks-by-company/{company}', [PksController::class, 'by_company']);
     Route::get('/history/work-hour/{deviceId}', [DeviceController::class, 'workhour']);
     Route::get('/history/indicator/{deviceId}', [DeviceController::class, 'indicator']);
+    Route::get('/device', [DeviceController::class, 'api_index']);
     Route::resource('/company', CompanyController::class)->only(['index','show']);
     Route::resource('/pks', PksController::class)->only(['index','show']);
     Route::resource('/stasiun', StasiunController::class)->only(['index','show']);
