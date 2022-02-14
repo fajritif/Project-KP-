@@ -16,17 +16,13 @@ class MillenaController extends Controller
 {
     public function holding()
     {
-          $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
-        return view('millena.holding',compact('data'));
        // return view('millena.holding');
-        if (! Gate::allows('view-all')) {
+        if (! Gate::allows('view-all')) {   
             $pks = Pks::where('COMPANY_CODE', auth()->user()->PTPN)->first();
             return redirect('ptpn/pks/'.$pks->KODE);
         }
-
-        //   $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
-        // return view('holding',compact('data'));
-        return view('millena.holding');
+        $data = DB::select("exec USP_ALL_INDIKATOR_BOILER");
+        return view('millena.holding',compact('data'));
 
     }
 
