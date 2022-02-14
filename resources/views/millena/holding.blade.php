@@ -71,10 +71,18 @@
 
                         let mydata = []
                         let latest = []
+                        var options = {
+
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "numeric",
+                            hour: "2-digit",
+                            minute: "2-digit"
+                        }
                         for (let i = 0; i < response.length; i++) {
 
                             mydata.push({
-                                x:  response[i].NAMA_PKS+ '('+response[i].KETERANGAN+')',
+                                x: response[i].NAMA_PKS + ' ' + response[i].LATEST.toLocaleString("en", options),
                                 y: response[i].PRESSURE.toFixed(2),
                                 goals: [{
                                     name: 'Minimal',
@@ -157,11 +165,10 @@
 
                 function updateChart(mydata) {
                     chartItem.updateSeries([{
-                            name: 'Actual',
-                            data: mydata
+                        name: 'Actual',
+                        data: mydata
 
-                        }]
-                    )
+                    }])
                 }
 
 
