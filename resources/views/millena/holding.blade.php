@@ -82,8 +82,10 @@
                         for (let i = 0; i < response.length; i++) {
 
                             mydata.push({
-                                x: response[i].NAMA_PKS + ' ' + response[i].LATEST.toLocaleString("en", options),
+                                x: response[i].NAMA_PKS + ' ' + response[i].SLUG,
                                 y: response[i].PRESSURE.toFixed(2),
+                                pressmin: response[i].MINIMAL,
+                                updated: response[i].LATEST,
                                 goals: [{
                                     name: 'Minimal',
                                     value: 17,
@@ -93,17 +95,17 @@
 
                             })
                             latest.push(
-                                response[i].LATEST
+                                response[i].MINIMAL
 
                             )
                         }
 
-                        updateChart(mydata)
+                        updateChart(mydata, latest)
 
                     })
                 }, 3000);
 
-                function chartdata(mydata) {
+                function chartdata(mydata, latest) {
 
                     var options = {
                         series: [
@@ -132,6 +134,34 @@
                                 cssClass: 'apexcharts-xaxis-label',
                             }
                         },
+                        tooltip: {
+                                style: {
+
+                                    fontSize: '8px',
+                                    fontFamily: 'Helvetica, Arial, sans-serif',
+                                    fontWeight: 400,
+                                    cssClass: 'apexcharts-xaxis-label',
+                                },
+
+                            custom: function({
+                                series,
+                                seriesIndex,
+                                dataPointIndex,
+                                w
+                            }) {
+                                var data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+
+                                return '<ul style=font-size:9px>' +
+                                    '<li><b>Unit</b>: ' + data.x + '</li>' +
+                                    '<li><b>Tekanan Aktual</b>: ' + data.y + '</li>' +
+                                    '<li><b>Tekanan Minimal</b>: '+ data.pressmin +'</li>' +
+                                    '<li><b>Latest Update</b>: '+ data.updated +'</li>' +
+
+
+                                    '</ul>';
+                            }
+
+                        },
                         xaxis: {
                             labels: {
 
@@ -145,6 +175,7 @@
                                 }
                             }
                         },
+
 
                         legend: {
                             show: true,
@@ -163,7 +194,7 @@
                 }
                 let chartItem = chartdata(null)
 
-                function updateChart(mydata) {
+                function updateChart(mydata, latest) {
                     chartItem.updateSeries([{
                         name: 'Actual',
                         data: mydata
