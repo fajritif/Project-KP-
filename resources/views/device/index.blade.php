@@ -190,13 +190,16 @@
                 $('.device-status').click(function(){
                     if($(this).hasClass('text-danger')){
                         new_is_active = 1; // ubah status
+                        new_title = 'aktif';
                     }else{
                         new_is_active = 0; // ubah status
+                        new_title = 'non aktif';
                     }
                     $.post('{{ url("admin/device") }}/'+$(this).data('kode'), {'_method':'PUT','IS_ACTIVE':new_is_active, '_token':'{{ csrf_token()  }}'}, function(){
 
                     }, 'json');
                     $(this).toggleClass('text-success text-danger').children().toggleClass('bxs-toggle-right bxs-toggle-left');
+                    $(this).attr('title', new_title);
                 });
             } ) 
             
@@ -329,10 +332,6 @@
                         }
 
                     }, 'json');
-                });
-
-                $('.device-status').click(function(){
-                    console.log('hai');
                 });
 
             });
