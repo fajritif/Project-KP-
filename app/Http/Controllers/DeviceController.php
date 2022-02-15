@@ -147,4 +147,16 @@ class DeviceController extends Controller
         $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE '$deviceId', '$date'");
         return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
     }
+
+    public function insert(Request $request) {
+        if (!isset($request->device_id, $request->tekanan, $request->suhu, $request->arus, $request->ph)) {
+            return response()->json([
+                "errorMessage" => "Data not complete"
+            ], 200, [], JSON_NUMERIC_CHECK);
+        }
+        $exec = DB::insert("EXEC USP_INSERT_DATA_BY_DEVICE '$request->device_id', $request->tekanan, $request->suhu, $request->arus, $request->ph");
+        return response()->json([
+            "message" => "Insert Success"
+        ], 200, [], JSON_NUMERIC_CHECK);
+    }
 }

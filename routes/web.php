@@ -59,6 +59,7 @@ Route::prefix('api')->group(function () {
     Route::get('/history/work-hour/{deviceId}', [DeviceController::class, 'workhour']);
     Route::get('/history/indicator/{deviceId}', [DeviceController::class, 'indicator']);
     Route::get('/device', [DeviceController::class, 'api_index']);
+    Route::post('/device/insert', [DeviceController::class, 'insert']);
 
     Route::resource('/company', CompanyController::class)->only(['index','show']);
     Route::resource('/pks', PksController::class)->only(['index','show']);

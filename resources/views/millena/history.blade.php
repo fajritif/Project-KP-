@@ -221,7 +221,6 @@
                     case "BLR":
                         $arrTemp[] = $item->PRESSURE;
                         break;
-                    case "CBC":
                     case "CST":
                     case "DIG":
                     case "FED":
@@ -230,6 +229,9 @@
                         break;
                     case "WTP":
                     $arrTemp[] = $item->PH;
+                        break;
+                    case "CBC":
+                    $arrTemp[] = $item->ARUS;
                         break;
                     }
                 //$arrTemp[] = $item->TEMPERATURE;//random_int(10.00, 25.00);
