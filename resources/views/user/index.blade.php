@@ -124,12 +124,17 @@
             
             t2.on( 'draw', function () {
                 // hindari event duplicate dengana unbind
-                $('.delete_button').unbind('click');
+                $('.delete_button, .edit_button').unbind('click');
                 $('.delete_button').click(function(){                    
                     $.post('{{ url("admin/user") }}', {'_method':'delete','_token':'{{ csrf_token() }}', 'nik_sap':$(this).data('nik-sap')}, function(data){
 
                     }, 'json');
                     t2.row($(this).parents('tr')).remove().draw();
+                });
+                $('.edit_button').click(function(){  
+                    $('#modal_alert').hide();
+                    $('#nik_sap').val($(this).data('nik-sap'));
+                    $('#roleid').val($(this).data('roleid'));
                 });
             } )   
 
@@ -149,13 +154,13 @@
                             user.PTPN,
                             user.PSA,
                             user.ROLEID,
+                            '<a href="#" class="text-warning edit_button" data-nik-sap="'+user.NIK_SAP+'" data-roleid="'+user.ROLEID+'"  data-bs-toggle="modal" data-bs-target="#userModal"><i class="bx bxs-edit"></i></a>&nbsp;'+
                             '<a href="#" class="text-danger delete_button" data-nik-sap="'+user.NIK_SAP+'"><i class="bx bxs-trash"></i></a>'
                         ]);
                     });  
                     t2.rows.add( datatable_users ).draw();
 
                 }, 'json');
-
 
                 $('#user_baru_button').click(function(){
 
@@ -176,6 +181,7 @@
                                     my_response.data.PTPN,
                                     my_response.data.PSA,
                                     my_response.data.ROLEID,
+                                    '<a href="#" class="text-warning edit_button" data-nik-sap="'+my_response.data.NIK_SAP+'" data-roleid="'+my_response.data.ROLEID+'" data-bs-toggle="modal" data-bs-target="#userModal"><i class="bx bxs-edit"></i></a>&nbsp;'+
                                     '<a href="#" class="text-danger delete_button" data-nik-sap="'+my_response.data.NIK_SAP+'"><i class="bx bxs-trash"></i></a>'
                                 ]).draw(false);
                             }else if(my_response.action == 'update_row'){
@@ -187,6 +193,7 @@
                                     my_response.data.PTPN,
                                     my_response.data.PSA,
                                     my_response.data.ROLEID,
+                                    '<a href="#" class="text-warning edit_button" data-nik-sap="'+my_response.data.NIK_SAP+'" data-roleid="'+my_response.data.ROLEID+'" data-bs-toggle="modal" data-bs-target="#userModal"><i class="bx bxs-edit"></i></a>&nbsp;'+
                                     '<a href="#" class="text-danger delete_button" data-nik-sap="'+my_response.data.NIK_SAP+'"><i class="bx bxs-trash"></i></a>'
                                 ]).draw(false);
                             }else if(my_response.action == 'remove_row'){
