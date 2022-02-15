@@ -39,7 +39,7 @@
 		<div class="sidebar-wrapper" data-simplebar="true">
 			<div class="sidebar-header">
 				<div>
-                    <img src="{{ url('') }}/millena.png" class="logo-icon" alt="logo icon">
+                    <img src="{{ url('millena.png') }}" class="logo-icon" alt="logo icon">
 				</div>
 				<div>
                     <h4 class="logo-text">Millena</h4>
@@ -80,8 +80,10 @@
 					</a>
 					
 					<ul>                       
-							<li><a href="{{ url('admin/device') }}">&ensp;<i class='bx bx-stop'></i>Device</a>
-							</li>
+						<li><a href="{{ url('admin/device') }}">&ensp;<i class='bx bx-layer'></i>Device</a>
+						</li>             
+						<li><a href="{{ url('admin/user') }}">&ensp;<i class='bx bxs-user'></i>User</a>
+						</li>
 					</ul>
 				</li>
                 

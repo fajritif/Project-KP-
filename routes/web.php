@@ -6,6 +6,7 @@ use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\MillenaController;
 use App\Http\Controllers\PksController;
 use App\Http\Controllers\StasiunController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -45,6 +46,9 @@ Route::prefix('test')->group(function () {
     //Route::get('/ptpn/{ptpn}/{pks}/history', [MillenaController::class, 'history']);
     Route::get('/holding', [MillenaController::class, 'holding'])->middleware(['auth']);
     Route::get('/admin/device/index-ajax', [MillenaController::class, 'index_ajax'])->middleware(['auth']);
+    Route::put('/admin/user', [UserController::class, 'update'])->middleware(['auth']);
+    Route::delete('/admin/user', [UserController::class, 'destroy'])->middleware(['auth']);
+    Route::resource('/admin/user', UserController::class)->only(['index','show', 'update'])->middleware(['auth']);
     Route::resource('/admin/device', DeviceController::class)->middleware(['auth']);
 
 Route::prefix('api')->group(function () {
