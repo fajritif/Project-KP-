@@ -25,8 +25,15 @@ class DeviceController extends Controller
 
     public function api_index()
     {
-        $devices = Device::all();
-        //dd($devices->first()->toArray());
+        $devices = new Device();
+        
+        // if(auth()->user()->ROLEID == 'ADMIN_ANPER'){
+        //     $devices = $devices->where;
+        // }elseif(auth()->user()->ROLEID == 'ADMIN_UNIT'){
+        //     $devices = $devices->get();
+        // }
+        $devices = $devices->get();
+        debug($devices);
 
         return response()->json($devices);
     }
