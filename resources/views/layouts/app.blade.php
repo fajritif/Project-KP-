@@ -71,7 +71,8 @@
                         </ul>
                     </li>
                 @endforeach
-                
+
+                @can('view-admin-menu')
 				<li>
 					<a href="#" class="has-arrow">
 						<div class="parent-icon"><i class='bx bx-cog'></i>
@@ -86,6 +87,7 @@
 						</li>
 					</ul>
 				</li>
+				@endcan
                 
 				<li>
 					<a href="#"  onclick="$('#logout_form').submit();" class="">

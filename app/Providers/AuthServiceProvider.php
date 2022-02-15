@@ -46,5 +46,12 @@ class AuthServiceProvider extends ServiceProvider
                 $user->ROLEID == 'ADMIN_HOLDING' ||
                 $user->ROLEID == 'VIEWER_HOLDING';
         });
+
+        Gate::define('view-admin-menu', function (HoldingAuth $user) {
+            return 
+                $user->ROLEID == 'ADMIN_HOLDING' ||
+                $user->ROLEID == 'ADMIN_ANPER' ||
+                $user->ROLEID == 'ADMIN_UNIT';
+        });
     }
 }
