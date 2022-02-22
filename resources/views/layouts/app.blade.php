@@ -26,7 +26,7 @@
         <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/dark-theme.css" />
         <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/semi-dark.css" />
         <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/header-colors.css" />
-	<title>@yield('title', 'Millena')</title>
+	<title>@yield('title', 'MIMS')</title>
 
         @livewireStyles
 	@show
@@ -47,7 +47,7 @@
                     <img src="{{ url('millena.png') }}" class="logo-icon" alt="logo icon">
 				</div>
 				<div>
-                    <h4 class="logo-text"><a href="{{ url('ptpn') }}" style="text-decoration:none">Millena</a></h4>
+                    <h4 class="logo-text"><a href="{{ url('ptpn') }}" style="text-decoration:none">MIMS</a></h4>
 				</div>
 				<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
 				</div>
@@ -353,7 +353,7 @@
 		<!--Start Back To Top Button--> <a href="javaScript:;" class="back-to-top"><i class='bx bxs-up-arrow-alt'></i></a>
 		<!--End Back To Top Button-->
 		<footer class="page-footer">
-			<p class="mb-0">Copyright © 2021. All right reserved.</p>
+			<p class="mb-0">Copyright © 2022. Holding Perkebunan Nusantara.</p>
 		</footer>
 	</div>
 	<!--end wrapper-->
