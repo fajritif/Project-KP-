@@ -175,7 +175,7 @@
 												</div>
 												<div class="flex-grow-1">
 													<h6 class="msg-name">New Customers<span class="msg-time float-end">14 Sec
-												ago</span></h6>
+												ago </span></h6>
 													<p class="msg-info">5 new user registered</p>
 												</div>
 											</div>
