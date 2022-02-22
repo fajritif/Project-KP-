@@ -17,7 +17,7 @@ class MillenaController extends Controller
     public function holding()
     {
        // return view('millena.holding');
-        if (! Gate::allows('view-all')) {   
+        if (! Gate::allows('view-all')) {
             $pks = Pks::where('COMPANY_CODE', auth()->user()->PTPN)->first();
             return redirect('ptpn/pks/'.$pks->KODE);
         }
@@ -36,7 +36,7 @@ class MillenaController extends Controller
     {
         $this->authorize('view-company', $pks->COMPANY_CODE);
 
-        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS '$pks->KODE'");
+        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS 'MILLENA', '19045EB0-7E99-4796-882E-D77884B5BF30', '$pks->KODE'");
         $pks = $pks->KODE;
         return view('millena.pks', compact('data', 'pks'));
     }
@@ -49,7 +49,7 @@ class MillenaController extends Controller
             $kodePks = $splitDeviceId[1];
         }
         $date = $request->date ?: date('Y-m-d');
-        $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE '$deviceId', '$date'");
+        $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE 'MILLENA', '19045EB0-7E99-4796-882E-D77884B5BF30', '$deviceId', '$date'");
         $deviceList = DB::select("EXEC USP_GET_DEVICE_BY_PKS '$kodePks'");
         $getDetail = DB::select("EXEC USP_GET_DETAIL_DEVICE '$deviceId'");
         $totalWorkHour = DB::select("EXEC USP_GET_TOTAL_WORK_HOUR '$deviceId', '$date'");
