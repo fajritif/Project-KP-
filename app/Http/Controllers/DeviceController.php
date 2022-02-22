@@ -26,7 +26,7 @@ class DeviceController extends Controller
     public function api_index()
     {
         $devices = new Device();
-        
+
         // if(auth()->user()->ROLEID == 'ADMIN_ANPER'){
         //     $devices = $devices->where;
         // }elseif(auth()->user()->ROLEID == 'ADMIN_UNIT'){
@@ -133,7 +133,7 @@ class DeviceController extends Controller
     }
 
     public function current($pks) {
-        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS $pks");
+        $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS 'MILLENA', '19045EB0-7E99-4796-882E-D77884B5BF30', $pks");
         return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
     }
 
@@ -151,7 +151,7 @@ class DeviceController extends Controller
 
     public function indicator(Request $request, $deviceId) {
         $date = $date = $request->date ?: date('Y-m-d');
-        $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE '$deviceId', '$date'");
+        $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE 'MILLENA', '19045EB0-7E99-4796-882E-D77884B5BF30', '$deviceId', '$date'");
         return response()->json($data, 200, [], JSON_NUMERIC_CHECK);
     }
 
