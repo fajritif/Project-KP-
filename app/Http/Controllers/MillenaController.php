@@ -38,7 +38,9 @@ class MillenaController extends Controller
 
         $data = DB::select("exec USP_GETDATA_INDIKATOR_TODAY_BY_PKS '$pks->KODE'");
         $pks = $pks->KODE;
-        return view('millena.pks', compact('data', 'pks'));
+       $pksName=DB::select(DB::raw("SELECT NAMA FROM M_PKS WHERE KODE='$pks'"));
+
+        return view('millena.pks', compact('data', 'pks','pksName'));
     }
 
     public function history(Request $request, $deviceId)

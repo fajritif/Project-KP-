@@ -30,6 +30,11 @@
 
         @livewireStyles
 	@show
+	<style>
+		a {
+	color: inherit;
+  }
+	</style>
 </head>
 
 <body>
@@ -42,15 +47,24 @@
                     <img src="{{ url('millena.png') }}" class="logo-icon" alt="logo icon">
 				</div>
 				<div>
-                    <h4 class="logo-text">Millena</h4>
+                    <h4 class="logo-text"><a href="{{ url('ptpn') }}" style="text-decoration:none">Millena</a></h4>
 				</div>
 				<div class="toggle-icon ms-auto"><i class='bx bx-arrow-to-left'></i>
 				</div>
 			</div>
 			<!--navigation-->
 			<ul class="metismenu" id="menu">
+			<li>
+					<a href="{{ url('ptpn') }}" >
+						<div class="parent-icon"><i class='bx bx-home-circle'></i>
+						</div>
+						<div class="menu-title">HOME</div>
+					</a>
+					
+				</li>
 				{{-- $companies diambil di app\Providers\AppServiceProvider.php --}}
                 @foreach($companies as $company)
+			
                     <li> 
                         <a href="#" class="has-arrow" 
 						@cannot('view-all')
@@ -109,12 +123,12 @@
 					</div>
 					<div class="search-bar flex-grow-1">
 						<div class="position-relative search-bar-box">
-							<input type="text" class="form-control search-control" placeholder="Type to search..."> <span class="position-absolute top-50 search-show translate-middle-y"><i class='bx bx-search'></i></span>
+							<input type="text" class="form-control search-control" placeholder="Type to search..."hidden> <span class="position-absolute top-50 search-show translate-middle-y" hidden><i class='bx bx-search'></i></span>
 							<span class="position-absolute top-50 search-close translate-middle-y"><i class='bx bx-x'></i></span>
 						</div>
 					</div>
 					<div class="top-menu ms-auto">
-						<ul class="navbar-nav align-items-center">
+						<ul class="navbar-nav align-items-center" hidden>
 							<li class="nav-item mobile-search-icon">
 								<a class="nav-link" href="#">	<i class='bx bx-search'></i>
 								</a>
@@ -310,7 +324,7 @@
 						<a class="d-flex align-items-center nav-link dropdown-toggle dropdown-toggle-nocaret" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 							<img src="{{ auth()->user()->NAMA_FILE ?auth()->user()->PATH_FILE_FOTO: url('files/user_blank.gif') }}" class="user-img" alt="user avatar">
 							<div class="user-info ps-3">
-								<p class="user-name mb-0">{{ auth()->id() }}</p>
+								<p class="user-name mb-0">{{ auth()->user()?auth()->user()->NAMA:'' }}</p>
 								<p class="designattion mb-0">{{ auth()->user()?auth()->user()->ROLEID:'' }}</p>
 							</div>
 						</a>

@@ -7,7 +7,8 @@
 
 @section('content')
 
-    <h6 class="mb-0 text-uppercase">Data Widgets</h6>
+    <h6 class="mb-0 text-uppercase">Data Widgets  @foreach($pksName as $Name) 
+    {{$Name->NAMA }}@endforeach</h6>
     <hr/>
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
         @foreach($data as $item)
