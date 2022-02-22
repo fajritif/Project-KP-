@@ -55,7 +55,7 @@ class AuthenticatedSessionController extends Controller
 
     public function api_login(Request $request)
     {
-        $data = DB::select("exec USP_VALIDATE_LOGIN_MILLENA '".$request->NIK_SAP."','".$request->USER_PASSWORD."'"); 
+        $data = DB::select("exec USP_VALIDATE_LOGIN_MILLENA 'MILLENA', '19045EB0-7E99-4796-882E-D77884B5BF30', '".$request->NIK_SAP."','".$request->USER_PASSWORD."'");
         $data = $data[0]; // ambil data pertama saja
 
         // jika data ditemukan
