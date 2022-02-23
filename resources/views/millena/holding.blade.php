@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('css')
-    @parent
+@push('page_css')
     {{-- Tambahkan <style> disini --}}
-@endsection
+@endpush
 
 @section('content')
     <div class="row">
@@ -25,9 +24,7 @@
 
         @endsection
 
-        @section('js')
-
-            @parent
+        @push('page_scripts')
             {{-- Tambahkan <script> disini --}}
             <script src="{{ url('') }}/assets/plugins/apexcharts-bundle/js/apexcharts.js"></script>
             <script>
@@ -265,4 +262,4 @@
                 // })
             </script>
 
-        @endsection
+    @endpush

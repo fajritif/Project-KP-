@@ -1,16 +1,15 @@
 @extends('layouts.app')
 
-@section('css')
-    @parent
+@push('page_css')
 	<link href="{{ url('vertical') }}/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
-@endsection
+@endpush
 
 @section('content')
     <h6 class="mb-0 text-uppercase">DAFTAR DEVICE</h6>
     <hr>
     <div class="card">
         <div class="card-body">
-            
+
             <table id="devices" class="table table-striped table-bordered dataTable" role="grid">
                 <thead>
                     <tr>
@@ -53,7 +52,7 @@
 
                     <form action="" id="edit-device-form" method="post">
                         @csrf
-                        
+
                         <div class="row mb-3">
                             <label for="company" class="col-sm-3 col-form-label">PTPN</label>
                             <div class="col-sm-9">
@@ -96,8 +95,8 @@
                                 <textarea class="form-control" id="keterangan" name="keterangan" rows="3" placeholder=""></textarea>
                             </div>
                         </div>
-                        
-								
+
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -109,8 +108,7 @@
     </div>
 @endsection
 
-@section('js')
-    @parent
+@push('page_scripts')
 		<script src="{{ url('vertical') }}/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
 		<script src="{{ url('vertical') }}/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
         <script>
@@ -118,7 +116,7 @@
                 var s = String(this);
                 while (s.length < (size || 2)) {s = "0" + s;}
                 return s;
-            }            
+            }
 
             let active_company = '';
             let company_code = '';
@@ -126,13 +124,13 @@
             let stasiun_code = '';
             let nomor = '';
             let kode_device = '';
-            let my_devices = [];                   
-            let datatable_devices = [];              
-            
+            let my_devices = [];
+            let datatable_devices = [];
+
             var t = $('#devices')
                 .on( 'init.dt', function () {
-                    
-                    
+
+
                     // this.api().columns().every( function () {
                     // var column = this;
                     // var select = $('<select><option value=""></option></select>')
@@ -141,19 +139,19 @@
                     //         var val = $.fn.dataTable.util.escapeRegex(
                     //             $(this).val()
                     //         );
-    
+
                     //         column
                     //             .search( val ? '^'+val+'$' : '', true, false )
                     //             .draw();
                     //     } );
-    
+
                     //     column.data().unique().sort().each( function ( d, j ) {
                     //         select.append( '<option value="'+d+'">'+d+'</option>' )
                     //     } );
                     // } );
 
-                } 
-                ).DataTable( {                
+                }
+                ).DataTable( {
                 data: [],
                 buttons: {
                     buttons: [
@@ -182,8 +180,8 @@
                 t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                     cell.innerHTML = i+1;
                 } );
-            } ).draw();  
-            
+            } ).draw();
+
             t.on( 'draw', function () {
                 // hindari event duplicate dengana unbind
                 $('.device-status').unbind('click');
@@ -201,8 +199,8 @@
                     $(this).toggleClass('text-success text-danger').children().toggleClass('bxs-toggle-right bxs-toggle-left');
                     $(this).attr('title', new_title);
                 });
-            } ) 
-            
+            } )
+
             // t.on('initComplete', function(){
             //     console.log('aaaaaaaa');
             //     this.api().columns().every( function () {
@@ -213,22 +211,22 @@
             //                 var val = $.fn.dataTable.util.escapeRegex(
             //                     $(this).val()
             //                 );
-    
+
             //                 column
             //                     .search( val ? '^'+val+'$' : '', true, false )
             //                     .draw();
             //             } );
-    
+
             //         column.data().unique().sort().each( function ( d, j ) {
             //             select.append( '<option value="'+d+'">'+d+'</option>' )
             //         } );
             //     } );
-            // });                  
+            // });
 
             $('#devices_filter').append(
                 ' <a href="javascript:;"  class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#editDeviceModal" id="device_baru_button"><i class="bx bxs-plus-square"></i>Device Baru</a>'
             );
-                    
+
 
             $(document).ready(function(){
                 fetch("{{ url('api/company') }}").then((response) => {
@@ -248,7 +246,7 @@
 
                     filter_pks();
                 });
-                
+
                 fetch("{{ url('api/stasiun') }}").then((response) => {
                     return response.json();
                 }).then((data) => {
@@ -256,7 +254,7 @@
                         $('#stasiun').append("<option value='"+stasiun.KODE+"'>"+stasiun.NAMA+"</option>")
                     });
                 });
-                
+
                 fetch("{{ url('api/device') }}").then((response) => {
                     return response.json();
                 }).then((json_devices) => {
@@ -279,7 +277,7 @@
                             // '<a href="javascript:;" class="text-warning"><i class="bx bxs-edit"></i></a>'+
                             status_button
                         ]);
-                    });  
+                    });
                     t.rows.add( datatable_devices ).draw();
                 });
 
@@ -310,7 +308,7 @@
 
                 $('#edit-device-form').submit(function(e){
                     e.preventDefault();
-                    $.post($(this).attr('action'), $(this).serialize(), function(my_response){  
+                    $.post($(this).attr('action'), $(this).serialize(), function(my_response){
                         if(my_response.status == true){
                             t.row.add([
                                 0,
@@ -355,8 +353,8 @@
 
                 if(company_code == '' || pks_code == '' || stasiun_code == '' ){
                     $('#nomor').val('');
-                }else{                    
-                    
+                }else{
+
                     filtered_devices = my_devices.filter(function(device,index){
                         return device.kode_prefix == prefix;
                     });
@@ -369,7 +367,7 @@
                 }
                 isi_kode_device();
 
-            } 
+            }
 
             let isi_kode_device = function(){
                 company_code = $('#company').val();
@@ -380,12 +378,12 @@
                 if(company_code == '' || pks_code == '' || stasiun_code == '' || nomor ==''){
                     $('#kode_device').val('');
                     $('#button-simpan-device').prop('disabled', true);
-                }else{        
-                    $('#kode_device').val(company_code + '-' + pks_code + '-' + stasiun_code + '-' + (parseInt(nomor)).pad(2));                    
+                }else{
+                    $('#kode_device').val(company_code + '-' + pks_code + '-' + stasiun_code + '-' + (parseInt(nomor)).pad(2));
                     $('#button-simpan-device').prop('disabled',false);
                 }
 
             }
 
         </script>
-@endsection
+@endpush

@@ -1,16 +1,14 @@
 @extends('layouts.app')
 
-@section('css')
-    @parent
+@push('page_css')
     {{-- Tambahkan <style> disini --}}
-@endsection
+@endpush
 
 @section('content')
-    
+
 @endsection
 
-@section('js')
-    @parent
+@push('page_scripts')
     {{-- Tambahkan <script> disini --}}
-@endsection
+@endpush
 

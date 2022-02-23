@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
-@section('css')
-    @parent
+@push('page_css')
 	<link href="{{ url('vertical') }}/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
-@endsection
+@endpush
 
 @section('content')
     <h6 class="mb-0 text-uppercase">DAFTAR USER</h6>
@@ -72,8 +71,8 @@
                                 </select>
                             </div>
                         </div>
-                        
-								
+
+
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -85,8 +84,7 @@
     </div>
 @endsection
 
-@section('js')
-    @parent
+@push('page_scripts')
 		<script src="{{ url('vertical') }}/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
 		<script src="{{ url('vertical') }}/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
         <script>
@@ -94,15 +92,15 @@
                 var s = String(this);
                 while (s.length < (size || 2)) {s = "0" + s;}
                 return s;
-            }            
-            let nomor = ''  
+            }
+            let nomor = ''
             let datatable_users = [];
-            
 
-            var t2 = $('#users').DataTable( {                
+
+            var t2 = $('#users').DataTable( {
                 data: [],
                 buttons: {
-                    
+
                 },
                 "columnDefs": [ {
                     "searchable": false,
@@ -114,39 +112,39 @@
                     "targets": 5
                 } ],
                 "order": [[ 1, 'asc' ]]
-            } );            
+            } );
 
             t2.on( 'order.dt search.dt', function () {
                 t2.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
                     cell.innerHTML = i+1;
                 } );
-            } ).draw();     
-            
+            } ).draw();
+
             t2.on( 'draw', function () {
                 // hindari event duplicate dengana unbind
                 $('.delete_button, .edit_button').unbind('click');
-                $('.delete_button').click(function(){                    
+                $('.delete_button').click(function(){
                     $.post('{{ url("admin/user") }}', {'_method':'delete','_token':'{{ csrf_token() }}', 'nik_sap':$(this).data('nik-sap')}, function(data){
 
                     }, 'json');
                     t2.row($(this).parents('tr')).remove().draw();
                 });
-                $('.edit_button').click(function(){  
+                $('.edit_button').click(function(){
                     $('#modal_alert').hide();
                     $('#nik_sap').val($(this).data('nik-sap'));
                     $('#roleid').val($(this).data('roleid'));
                 });
-            } )   
+            } )
 
             $('#users_filter').append(
                 ' <a href="javascript:;"  class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#userModal" id="user_baru_button"><i class="bx bxs-plus-square"></i>Tambah User</a>'
             );
-                    
+
 
             $(document).ready(function(){
-                
+
                 $.get('{{ url("admin/user") }}', {}, function(data){
-                    
+
                     data.forEach(user => {
                         datatable_users.push([
                             0,
@@ -157,7 +155,7 @@
                             '<a href="#" class="text-warning edit_button" data-nik-sap="'+user.NIK_SAP+'" data-roleid="'+user.ROLEID+'"  data-bs-toggle="modal" data-bs-target="#userModal"><i class="bx bxs-edit"></i></a>&nbsp;'+
                             '<a href="#" class="text-danger delete_button" data-nik-sap="'+user.NIK_SAP+'"><i class="bx bxs-trash"></i></a>'
                         ]);
-                    });  
+                    });
                     t2.rows.add( datatable_users ).draw();
 
                 }, 'json');
@@ -171,7 +169,7 @@
 
                 $('#edit-user-form').submit(function(e){
                     e.preventDefault();
-                    $.post($(this).attr('action'), $(this).serialize(), function(my_response){  
+                    $.post($(this).attr('action'), $(this).serialize(), function(my_response){
                         if(my_response.status == true){
 
                             if(my_response.action == 'add_row'){
@@ -215,4 +213,4 @@
             });
 
         </script>
-@endsection
+@endpush
