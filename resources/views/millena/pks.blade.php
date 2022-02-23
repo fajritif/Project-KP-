@@ -4,6 +4,10 @@
     {{-- Tambahkan <style> disini --}}
 @endpush
 
+@push('page_scripts_header')
+    <script src="{{ url('') }}/assets/js/moment.js"></script>
+@endpush
+
 @section('content')
 
     <h6 class="mb-0 text-uppercase">Data Widgets  @foreach($pksName as $Name)
@@ -34,7 +38,6 @@
     {{-- Tambahkan <script> disini --}}
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts.js"></script>
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
-    <script src="{{ url('') }}/assets/js/moment.js"></script>
     <script>
 
         function handleClickDevice(deviceId) {
@@ -43,7 +46,7 @@
 
         function drawGaugeChart(chartId, lastUpdateId, dataValue, lastUpdate, gaugeTitle, gaugeSatuan, standartBlock) {
             if (lastUpdate) {
-                document.getElementById(lastUpdateId).textContent = "Last Update "+lastUpdate;
+                document.getElementById(lastUpdateId).textContent = "Last update "+moment(lastUpdate, "YYYY-MM-DD HH:mm:ss").fromNow();
             } else {
                 document.getElementById(lastUpdateId).textContent = "Device Not Active";
             }
@@ -189,7 +192,7 @@
                     $valData = round($item->ARUS, 2);
                     $standartBlock = [30,50,70];
                 }
-                if ($item->TANGGAL != null) { $fDate = date('d M Y H:i:s', strtotime($item->TANGGAL)); }
+                if ($item->TANGGAL != null) { $fDate = $item->TANGGAL; }
                 @endphp
                 arrGauge["{{ $item->DEVICE_ID  }}"] =
                 drawGaugeChart(
@@ -221,6 +224,12 @@
                             dataVal = Math.round(element.ARUS*100)/100
                         }
                         arrGauge[element.DEVICE_ID].series[0].points[0].update(dataVal)
+                        let textUpdateId = "lastUpdate"+element.DEVICE_ID.replaceAll("-", "");
+                        if (element.TANGGAL != null) {
+                            document.getElementById(textUpdateId).textContent = "Last update "+moment(element.TANGGAL, "YYYY-MM-DD HH:mm:ss").fromNow();
+                        } else {
+                            document.getElementById(textUpdateId).textContent = "Device Not Active";
+                        }
                     })
                 })
             }, 3000)
