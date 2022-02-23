@@ -24,7 +24,7 @@
                             </div>
                         </div>
                         <div class="" id="{{ $item->DEVICE_ID }}"></div>
-                        <div class="align-items-center">
+                        <div class="align-items-center text-center">
                             <span id="{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}"></span>
                         </div>
                     </div>
