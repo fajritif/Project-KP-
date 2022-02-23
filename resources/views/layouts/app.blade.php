@@ -15,21 +15,20 @@
 	<link href="{{ url('vertical') }}/assets/css/pace.min.css" rel="stylesheet" />
 	<script src="{{ url('vertical') }}/assets/js/pace.min.js"></script>
 
-    @section('css')
+    <!-- Bootstrap CSS -->
+    <link href="{{ url('vertical') }}/assets/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link href="{{ url('vertical') }}/assets/css/app.css" rel="stylesheet">
+    <link href="{{ url('vertical') }}/assets/css/icons.css" rel="stylesheet">
+    <!-- Theme Style CSS -->
+    <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/dark-theme.css" />
+    <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/semi-dark.css" />
+    <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/header-colors.css" />
+    <title>@yield('title', 'MIMS')</title>
 
-        <!-- Bootstrap CSS -->
-        <link href="{{ url('vertical') }}/assets/css/bootstrap.min.css" rel="stylesheet">
-        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-        <link href="{{ url('vertical') }}/assets/css/app.css" rel="stylesheet">
-        <link href="{{ url('vertical') }}/assets/css/icons.css" rel="stylesheet">
-        <!-- Theme Style CSS -->
-        <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/dark-theme.css" />
-        <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/semi-dark.css" />
-        <link rel="stylesheet" href="{{ url('vertical') }}/assets/css/header-colors.css" />
-	<title>@yield('title', 'MIMS')</title>
+    @stack('page_css')
 
-        @livewireStyles
-	@show
+    @stack('page_scripts_header')
 	<style>
 		a {
 	color: inherit;
@@ -60,16 +59,16 @@
 						</div>
 						<div class="menu-title">HOME</div>
 					</a>
-					
+
 				</li>
 				{{-- $companies diambil di app\Providers\AppServiceProvider.php --}}
                 @foreach($companies as $company)
-			
-                    <li> 
-                        <a href="#" class="has-arrow" 
+
+                    <li>
+                        <a href="#" class="has-arrow"
 						@cannot('view-all')
 							aria-expanded="true"
-						@endcannot						
+						@endcannot
 						>
                             <div class="parent-icon">
                                 {{-- <i class='bx bxs-buildings'></i> --}}
@@ -78,7 +77,7 @@
                             <div class="menu-title">{{ $company->NAMA }}</div>
                         </a>
                         <ul>
-                            @foreach($company->pks as $pks)                            
+                            @foreach($company->pks as $pks)
                                 <li><a href="{{ url('ptpn/pks/'.$pks->KODE) }}">&ensp;<i class='bx bxs-factory'></i>{{ $pks->nama2 }}</a>
                                 </li>
                             @endforeach
@@ -93,16 +92,16 @@
 						</div>
 						<div class="menu-title">Administrator</div>
 					</a>
-					
-					<ul>                       
+
+					<ul>
 						<li><a href="{{ url('admin/device') }}">&ensp;<i class='bx bx-layer'></i>Device</a>
-						</li>             
+						</li>
 						<li><a href="{{ url('admin/user') }}">&ensp;<i class='bx bxs-user'></i>User</a>
 						</li>
 					</ul>
 				</li>
 				@endcan
-                
+
 				<li>
 					<a href="#"  onclick="$('#logout_form').submit();" class="">
 						<div class="parent-icon"><i class='bx bx-log-out-circle'></i>
@@ -110,7 +109,7 @@
 						<div class="menu-title">Logout</div>
 					</a>
 				</li>
-				
+
 			</ul>
 			<!--end navigation-->
 		</div>
@@ -329,7 +328,7 @@
 							</div>
 						</a>
 						<ul class="dropdown-menu dropdown-menu-end">
-                            
+
 								<button type="submit" form="logout_form" class="dropdown-item"><i class='bx bx-log-out-circle'></i><span>Logout</span></button>
                                     <form method="POST"  action="{{ route('logout') }}" id="logout_form">
                                         @csrf
@@ -454,18 +453,16 @@
 	</div>
 	<!--end switcher-->
 
-    @section('js')
-        <!-- Bootstrap JS -->
-        <script src="{{ url('vertical') }}/assets/js/bootstrap.bundle.min.js"></script>
-        <!--plugins-->
-        <script src="{{ url('vertical') }}/assets/js/jquery.min.js"></script>
-        <script src="{{ url('vertical') }}/assets/plugins/simplebar/js/simplebar.min.js"></script>
-        <script src="{{ url('vertical') }}/assets/plugins/metismenu/js/metisMenu.min.js"></script>
-        <script src="{{ url('vertical') }}/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
-        <!--app JS-->
-        <script src="{{ url('vertical') }}/assets/js/app.js"></script>
-        @livewireScripts
-    @show
+    <!-- Bootstrap JS -->
+    <script src="{{ url('vertical') }}/assets/js/bootstrap.bundle.min.js"></script>
+    <!--plugins-->
+    <script src="{{ url('vertical') }}/assets/js/jquery.min.js"></script>
+    <script src="{{ url('vertical') }}/assets/plugins/simplebar/js/simplebar.min.js"></script>
+    <script src="{{ url('vertical') }}/assets/plugins/metismenu/js/metisMenu.min.js"></script>
+    <script src="{{ url('vertical') }}/assets/plugins/perfect-scrollbar/js/perfect-scrollbar.js"></script>
+    <!--app JS-->
+    <script src="{{ url('vertical') }}/assets/js/app.js"></script>
+    @stack('page_scripts')
 </body>
 
 </html>

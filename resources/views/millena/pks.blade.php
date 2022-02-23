@@ -1,13 +1,16 @@
 @extends('layouts.app')
 
-@section('css')
-    @parent
+@push('page_css')
     {{-- Tambahkan <style> disini --}}
-@endsection
+@endpush
+
+@push('page_scripts_header')
+    <script src="{{ url('') }}/assets/js/moment.js"></script>
+@endpush
 
 @section('content')
 
-    <h6 class="mb-0 text-uppercase">Data Widgets  @foreach($pksName as $Name) 
+    <h6 class="mb-0 text-uppercase">Data Widgets  @foreach($pksName as $Name)
     {{$Name->NAMA }}@endforeach</h6>
     <hr/>
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
@@ -31,8 +34,7 @@
     </div>
 @endsection
 
-@section('js')
-    @parent
+@push('page_scripts')
     {{-- Tambahkan <script> disini --}}
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts.js"></script>
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
@@ -44,7 +46,7 @@
 
         function drawGaugeChart(chartId, lastUpdateId, dataValue, lastUpdate, gaugeTitle, gaugeSatuan, standartBlock) {
             if (lastUpdate) {
-                document.getElementById(lastUpdateId).textContent = "Last Update "+lastUpdate;
+                document.getElementById(lastUpdateId).textContent = "Last update "+moment(lastUpdate, "YYYY-MM-DD HH:mm:ss").fromNow();
             } else {
                 document.getElementById(lastUpdateId).textContent = "Device Not Active";
             }
@@ -168,13 +170,19 @@
                 @php
                 $fDate = null;
                 $valData = 0;
-                $standartBlock = [10,17,25];
+                $standartBlock = [10,17,30];
                 if(preg_match('(BLR|BPV|PRS|RBS|TRB)', $item->DEVICE_ID) === 1) {
                     $valData = round($item->PRESSURE, 2);
                 }
+                if(preg_match('(BPV|RBS)', $item->DEVICE_ID) === 1) {
+                    $standartBlock = [1,3,5];
+                }
+                if(false !== strpos($item->DEVICE_ID, "PRS")) {
+                    $standartBlock = [30,50,70];
+                }
                 if(preg_match('(CST|DIG|FED|GEN)', $item->DEVICE_ID) === 1) {
                     $valData = round($item->TEMPERATURE, 2);
-                    $standartBlock = [80,110, 150];
+                    $standartBlock = [80,110,150];
                 }
                 if(false !== strpos($item->DEVICE_ID, "WTP")) {
                     $valData = round($item->PH, 2);
@@ -182,9 +190,9 @@
                 }
                 if(false !== strpos($item->DEVICE_ID, "CBC")) {
                     $valData = round($item->ARUS, 2);
-                    $standartBlock = [4,7,15];
+                    $standartBlock = [30,50,70];
                 }
-                if ($item->TANGGAL != null) { $fDate = date('d M Y H:i:s', strtotime($item->TANGGAL)); }
+                if ($item->TANGGAL != null) { $fDate = $item->TANGGAL; }
                 @endphp
                 arrGauge["{{ $item->DEVICE_ID  }}"] =
                 drawGaugeChart(
@@ -216,10 +224,16 @@
                             dataVal = Math.round(element.ARUS*100)/100
                         }
                         arrGauge[element.DEVICE_ID].series[0].points[0].update(dataVal)
+                        let textUpdateId = "lastUpdate"+element.DEVICE_ID.replaceAll("-", "");
+                        if (element.TANGGAL != null) {
+                            document.getElementById(textUpdateId).textContent = "Last update "+moment(element.TANGGAL, "YYYY-MM-DD HH:mm:ss").fromNow();
+                        } else {
+                            document.getElementById(textUpdateId).textContent = "Device Not Active";
+                        }
                     })
                 })
             }, 3000)
         })
     </script>
-@endsection
+@endpush
 

@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
-@section('css')
-    @parent
+@push('page_css')
     {{-- Tambahkan <style> disini --}}
     <link href="{{ url('vertical') }}/assets/plugins/datetimepicker/css/classic.css" rel="stylesheet"/>
     <link href="{{ url('vertical') }}/assets/plugins/datetimepicker/css/classic.date.css" rel="stylesheet"/>
-@endsection
+@endpush
 
 @section('content')
     <div class="card shadow-none bg-transparent border-bottom border-2">
@@ -67,8 +66,7 @@
     </div><!--end row-->
 @endsection
 
-@section('js')
-    @parent
+@push('page_scripts')
     <script src="{{ url('vertical/assets/plugins/apexcharts-bundle/js/apexcharts.min.js') }}"></script>
     <script src="{{ url('vertical/assets/plugins/datetimepicker/js/legacy.js') }}"></script>
     <script src="{{ url('vertical/assets/plugins/datetimepicker/js/picker.js') }}"></script>
@@ -279,5 +277,5 @@
             window.location.href = "{{ url('/ptpn/device') }}/" + selectedDeviceId + "?date=" + selectedDate;
         }
     </script>
-@endsection
+@endpush
 
