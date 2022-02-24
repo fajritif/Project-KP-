@@ -18,10 +18,25 @@ class UserController extends Controller
 
         if(request()->ajax()){
             $data = collect(DB::select("exec USP_GET_USERS ")); 
-            return response()->json($data);
+
+            if(auth()->user()->ROLEID == 'ADMIN_ANPER'){
+                $data = $data->filter(function($d){
+                    //debug(sprintf("%s vs %s",auth()->user()->PTPN,$d->PTPN));
+                    return auth()->user()->PTPN == $d->PTPN;
+                });
+            }
+            
+            if(auth()->user()->ROLEID == 'ADMIN_UNIT'){
+                $data = $data->filter(function($d){
+                    return auth()->user()->PTPN == $d->PTPN && auth()->user()->PSA == $d->PSA;
+                });
+            }
+            
+            return response()->json($data->values());
         }
         else{
-            return view('user.index');
+            $roles = ['ADMIN_UNIT','ADMIN_ANPER','ADMIN_HOLDING','VIEWER_UNIT','VIEWER_ANPER','VIEWER_HOLDING'];
+            return view('user.index', compact('roles'));
         }
     }
 
@@ -77,13 +92,13 @@ class UserController extends Controller
      */
     public function update(Request $request, $id=false)
     {
-             
 
         if(request()->ajax()){
-
+            debug($request->all());
             $response = new stdClass();
 
             $user = DB::select("exec USP_GET_USER_BY_NIK_SAP '".$request->nik_sap."'")[0];
+            $this->authorize('update-role', [$request->roleid, $user]); 
             
             if($user->NIK_SAP){
                 $response->status = true;

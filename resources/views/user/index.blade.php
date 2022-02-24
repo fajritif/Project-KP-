@@ -62,12 +62,11 @@
                             <div class="col-sm-9">
                                 <select class="form-select" aria-label="Default select example" name="roleid" id="roleid">
                                     <option value="">-- Pilih ROLE --</option>
-                                    <option >ADMIN_UNIT</option>
-                                    <option >ADMIN_ANPER</option>
-                                    <option >ADMIN_HOLDING</option>
-                                    <option >VIEWER_UNIT</option>
-                                    <option >VIEWER_ANPER</option>
-                                    <option >VIEWER_HOLDING</option>
+                                    @foreach ($roles as $role)
+                                        @can('set-role', $role)
+                                            <option >{{ $role }}</option>
+                                        @endcan
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -144,6 +143,8 @@
             $(document).ready(function(){
 
                 $.get('{{ url("admin/user") }}', {}, function(data){
+
+                    console.log(data);
 
                     data.forEach(user => {
                         datatable_users.push([

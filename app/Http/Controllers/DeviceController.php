@@ -26,15 +26,15 @@ class DeviceController extends Controller
     public function api_index()
     {
         $devices = new Device();
-
-        // if(auth()->user()->ROLEID == 'ADMIN_ANPER'){
-        //     $devices = $devices->where;
-        // }elseif(auth()->user()->ROLEID == 'ADMIN_UNIT'){
-        //     $devices = $devices->get();
-        // }
+        
+        if(auth()->user()->ROLEID == 'ADMIN_ANPER'){
+            $devices = $devices->where('COMPANY_CODE', auth()->user()->PTPN);
+        }elseif(auth()->user()->ROLEID == 'ADMIN_UNIT'){
+            $devices = $devices->where('COMPANY_CODE', auth()->user()->PTPN)->where('KODE_PKS', auth()->user()->PSA);
+        }
         $devices = $devices->get();
-        debug($devices);
-
+        debug($devices->first());
+            debug(auth()->user());
         return response()->json($devices);
     }
 
@@ -56,6 +56,9 @@ class DeviceController extends Controller
      */
     public function store(Request $request)
     {
+        // debug(auth()->user());
+        // debug($request->all());
+        $this->authorize('create-device', [$request->company, $request->pks]);
         $response = new stdClass();
 
         $device = Device::find($request->kode_device);

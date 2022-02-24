@@ -56,17 +56,26 @@
                         <div class="row mb-3">
                             <label for="company" class="col-sm-3 col-form-label">PTPN</label>
                             <div class="col-sm-9">
-                                <select class="form-select" aria-label="Default select example" name="company" id="company">
-                                    <option selected="" value="">-- Pilih PTPN --</option>
-                                </select>
+                                
+                                @if(auth()->user()->ROLEID == 'ADMIN_HOLDING')
+                                    <select class="form-select" aria-label="Default select example" name="company" id="company">
+                                        <option selected="" value="">-- Pilih PTPN --</option>
+                                    </select>
+                                @else
+                                    <input type="text" class="form-control" id="company" name="company" value="{{ auth()->user()->PTPN }}" readonly>
+                                @endif
                             </div>
                         </div>
                         <div class="row mb-3">
                             <label for="pks" class="col-sm-3 col-form-label">PKS</label>
                             <div class="col-sm-9">
+                                @if(auth()->user()->ROLEID == 'ADMIN_UNIT')
+                                <input type="text" class="form-control" id="pks" name="pks" value="{{ auth()->user()->PSA }}" readonly>
+                                @else
                                 <select class="form-select" aria-label="Default select example" name="pks" id="pks">
                                     <option selected="" value="">-- Pilih PKS --</option>
                                 </select>
+                                @endif
                             </div>
                         </div>
                         <div class="row mb-3">
@@ -229,24 +238,31 @@
 
 
             $(document).ready(function(){
-                fetch("{{ url('api/company') }}").then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    data.forEach(company => {
-                        $('#company').append("<option value='"+company.KODE+"'>"+company.NAMA+"</option>")
+                
+                @if(auth()->user()->ROLEID == 'ADMIN_HOLDING')
+                
+                    fetch("{{ url('api/company') }}").then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        data.forEach(company => {
+                            $('#company').append("<option value='"+company.KODE+"'>"+company.NAMA+"</option>");
+                        });
                     });
-                });
+                @endif
 
-                fetch("{{ url('api/pks') }}").then((response) => {
-                    return response.json();
-                }).then((data) => {
-                    data.forEach(pks => {
-                        $('#pks').append("<option value='"+pks.KODE+"' data-company='"+pks.COMPANY_CODE+"' class='pks_option'>"+pks.NAMA+"</option>")
+                @unless(auth()->user()->ROLEID == 'ADMIN_UNIT')
+                    fetch("{{ url('api/pks') }}").then((response) => {
+                        return response.json();
+                    }).then((data) => {
+                        data.forEach(pks => {
+                            $('#pks').append("<option value='"+pks.KODE+"' data-company='"+pks.COMPANY_CODE+"' class='pks_option'>"+pks.NAMA+"</option>")
+                        });
+
+                        filter_pks();
                     });
 
-                    filter_pks();
-                });
-
+                @endunless
+                
                 fetch("{{ url('api/stasiun') }}").then((response) => {
                     return response.json();
                 }).then((data) => {
@@ -296,12 +312,18 @@
                 $('#device_baru_button').click(function(){
 
                     $('#modal_alert').hide();
-
+                    
+                    @if(auth()->user()->ROLEID == 'ADMIN_HOLDING')
                     $('#company').val($("#company option:first").val());
+                    @endif
+
                     $('#stasiun').val($("#stasiun option:first").val());
                     $('#nomor').val('');
                     $('#kode_device').val('');
+                    
+                    @unless(auth()->user()->ROLEID == 'ADMIN_UNIT')
                     filter_pks();
+                    @endunless
 
                     $('#edit-device-form').attr('action', "{{ url('admin/device') }}");
                 });
@@ -317,7 +339,7 @@
                                 my_response.data.KODE_PKS,
                                 my_response.data.KODE_STASIUN,
                                 my_response.data.KETERANGAN,
-                                '<a data-kode="'+dev.KODE_DEVICE+'" href="javascript:;" class="text-success device-status" title="aktiv"><i class="bx bxs-toggle-right" style="font-size:16pt"></i></a>'
+                                '<a data-kode="'+my_response.data.KODE_DEVICE+'" href="javascript:;" class="text-success device-status" title="aktiv"><i class="bx bxs-toggle-right" style="font-size:16pt"></i></a>'
                             ]).draw(false);
 
                             my_devices.push(my_response.data);
@@ -331,7 +353,6 @@
 
                     }, 'json');
                 });
-
             });
 
             let filter_pks = function(){
