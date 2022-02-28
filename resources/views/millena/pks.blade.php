@@ -39,7 +39,7 @@
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts.js"></script>
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
     <script>
-
+        moment.relativeTimeThreshold('ss', 0);
         function handleClickDevice(deviceId) {
             window.location.href = '{{ url("ptpn/device/") }}/'+deviceId
         }
