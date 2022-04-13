@@ -100,7 +100,7 @@
                         updateChart(mydata, latest)
 
                     })
-                }, 3000);
+                }, 10000);
 
                 function chartdata(mydata, latest) {
 
