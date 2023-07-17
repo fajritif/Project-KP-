@@ -107,7 +107,7 @@
                     }
                 },
                 stroke: {
-                    width: 5,
+                    width: 4,
                     curve: 'smooth'
                 },
                 xaxis: {
@@ -146,7 +146,7 @@
                     },
                 },
                 markers: {
-                    size: 4,
+                    size: 0,
                     colors: ["#0A73BA"],
                     strokeColors: "#fff",
                     strokeWidth: 2,
@@ -159,6 +159,7 @@
                     title: {
                         text: yAxisTitle,
                     },
+                    min: 0,
                 }
             };
             var chart = new ApexCharts(document.querySelector("#chart1"), options);

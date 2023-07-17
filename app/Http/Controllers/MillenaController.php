@@ -51,7 +51,7 @@ class MillenaController extends Controller
             $kodePks = $splitDeviceId[1];
         }
         $date = $request->date ?: date('Y-m-d');
-        $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE 'MILLENA', '19045EB0-7E99-4796-882E-D77884B5BF30', '$deviceId', '$date'");
+        $data = DB::select("EXEC USP_GET_DATA_PER_DAY_BY_DEVICE_V2 'MILLENA', '19045EB0-7E99-4796-882E-D77884B5BF30', '$deviceId', '$date'");
         $deviceList = DB::select("EXEC USP_GET_DEVICE_BY_PKS '$kodePks'");
         $getDetail = DB::select("EXEC USP_GET_DETAIL_DEVICE '$deviceId'");
         $totalWorkHour = DB::select("EXEC USP_GET_TOTAL_WORK_HOUR '$deviceId', '$date'");
