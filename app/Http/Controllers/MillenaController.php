@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class MillenaController extends Controller
 {
@@ -66,4 +67,12 @@ class MillenaController extends Controller
         }
         return view('millena.history', compact('data', 'deviceId', 'deviceList', 'detail', 'totalWorkHour'));
     }
+
+    public function streaming($pks)
+    {
+        return view("millena.cctv_streaming", [
+            "device" => $pks
+        ]);
+    }
+
 }
