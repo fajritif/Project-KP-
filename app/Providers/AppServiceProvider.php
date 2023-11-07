@@ -29,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
         View::composer('layouts.app', function($view){
 
                 $companies = Company::with('pks')->orderBy('NAMA');
-
                 // Pengaturan gate (hak akses) ada di app/Providers/AuthServiceProvider.php
                 if (! Gate::allows('view-all')) {
                     $companies = $companies->where('KODE', auth()->user()->PTPN);

@@ -2,10 +2,37 @@
 
 @push('page_css')
     {{-- Tambahkan <style> disini --}}
+        <style>
+            .cctv-btn {
+                position: absolute;
+                /* border-right: 2px solid black;
+                border-bottom: 2px solid black; */
+                border-bottom-right-radius: 20px;
+                
+            }
+
+            .cctv-btn img {
+                padding-right: 2px;
+                padding-bottom: 8px;
+                height: 50px;
+            }
+
+            .cctv-btn:hover {
+                background-color: #E0F4FF;
+            }
+
+            #link-stream {
+                width: 100%;
+                height: 100%;
+            }
+        </style>
 @endpush
 
 @push('page_scripts_header')
+<link rel="stylesheet" href="{{ url('') }}/css/video-js.css">
     <script src="{{ url('') }}/assets/js/moment.js"></script>
+    <script src="{{ url('') }}/js/video.min.js"></script>
+    <script src="{{ url('') }}/js/videojs-http-streaming.min.js"></script>
 @endpush
 
 @section('content')
@@ -16,11 +43,11 @@
     <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
         @foreach($data as $item)
             <div class="col">
-                <div class="card radius-10" onclick="handleClickDevice('{{ $item->DEVICE_ID }}')" style="cursor: pointer">
-                    <div class="card-body">
+                <div class="card radius-10" style="cursor: pointer">
+                    <div onclick="handleClickDevice('{{ $item->DEVICE_ID }}')" class="card-body mt-5">
                         <div class="align-items-center">
                             <div class="text-center">
-                                <h6 class="mb-0">{{ $item->DEVICE_NAME }}</h6>
+                                <h6 class="mb-0 mt-3">{{ $item->DEVICE_NAME }}</h6>
                             </div>
                         </div>
                         <div class="" id="{{ $item->DEVICE_ID }}"></div>
@@ -28,10 +55,34 @@
                             <span id="{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}"></span>
                         </div>
                     </div>
+                    @if ($item->CAMERA_STREAMING)
+                    <a onclick="showStream(event)" href="javascript:void(0)" data-name="{{ $item->DEVICE_NAME }}" data-device="{{ $item->DEVICE_ID }}" data-bs-toggle="modal" data-bs-target="#stream-modal" class="cctv-btn">
+                        <img src="{{ url('') }}/assets/icon/security-camera.png" data-device="{{ $item->DEVICE_ID }}" data-name="{{ $item->DEVICE_NAME }}"/>
+                    </a>
+                    @endif
                 </div>
             </div>
         @endforeach
     </div>
+
+    {{-- Modal Streaming --}}
+    <div class="modal fade" id="stream-modal" tabindex="-1" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="title-modal"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <iframe id="link-stream" src="" frameborder="0"></iframe>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- End Modal Streaming --}}
 @endsection
 
 @push('page_scripts')
@@ -39,6 +90,27 @@
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts.js"></script>
     <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
     <script>
+
+        function showStream(e) {
+            const deviceId = e.target.getAttribute("data-device");
+            const deviceName = e.target.getAttribute("data-name");
+            $("#title-modal").html(deviceName);
+            let url = `{{ route('cctv.streaming', ':id') }}`.replace(':id', deviceId);
+            $("#link-stream").attr("src", url)
+        }
+        document.getElementById("link-stream").onload = function () {
+            // Mengambil tinggi iframe
+            var iframeHeight = this.contentWindow.document.body.scrollHeight;
+
+            var modalBody = document.querySelector(".modal-body");
+            modalBody.style.height = iframeHeight+50 + "px";
+        };
+
+        $('#stream-modal').on('hidden.bs.modal', function () {
+        // Menghapus src iframe
+            document.getElementById("link-stream").src = "";
+        });
+
         moment.relativeTimeThreshold('ss', 0);
         function handleClickDevice(deviceId) {
             window.location.href = '{{ url("ptpn/device/") }}/'+deviceId
