@@ -21,26 +21,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
-        // $schedule->command("cctv:run")->dailyAt("03:27")->runInBackground();
-        // $schedule->call(function () use ($schedule) {
-        //     $devices = Device::whereNotNull("CAMERA_STREAMING")->get();
-        //     try {
-        //         foreach ($devices as $device) {
-        //             if ($device->CAMERA_STREAMING) {
-        //                 $kode = $device->KODE_DEVICE;
-        //                 $escapedUrl = escapeshellarg($device->CAMERA_STREAMING);
-        //                 $directoryPath = "D:\\Projects\\ptpn5\\millena-holding-web\\public\\streaming\\$kode";
-        //                 $scriptDir = "IF NOT EXIST \"$directoryPath\" (mkdir \"$directoryPath\")";
-        //                 $script = "ffmpeg -v verbose  -i $escapedUrl -vcodec libx264 -r 25 -b:v 1000k -crf 23 -acodec aac -b:a 128k -sc_threshold 0 -f hls -hls_time 5 -segment_time 5 -hls_list_size 5 -hls_flags delete_segments D:\\Projects\\ptpn5\\millena-holding-web\\public\\streaming\\$kode\\stream.m3u8";
-        //                 $fullScript = "$scriptDir && start /B $script &";
-        //                 shell_exec($fullScript);
-        //             }
-        //         }
-        //     } catch (Exception $e) {
-        //         Log::info($e);
-        //     }
-        // })->runInBackground();
 
 
         $schedule->call(function () {
@@ -86,26 +66,6 @@ class Kernel extends ConsoleKernel
                 Log::info($e);
             }
         })->runInBackground();
-
-        // $schedule->call(function () {
-        //     $devices = Device::whereNotNull("CAMERA_STREAMING")->get();
-        //     try {
-        //         foreach ($devices as $device) {
-        //             if ($device->CAMERA_STREAMING) {
-        //                 $kode = $device->KODE_DEVICE;
-        //                 $escapedUrl = escapeshellarg($device->CAMERA_STREAMING);
-        //                 $directoryPath = "D:\\Projects\\ptpn5\\millena-holding-web\\public\\streaming\\$kode";
-        //                 $scriptDir = "IF NOT EXIST \"$directoryPath\" (mkdir \"$directoryPath\")";
-        //                 $script = "ffmpeg -v verbose -i $escapedUrl -vcodec libx264 -r 25 -b:v 1000000 -crf 31 -acodec aac -sc_threshold 0 -f hls -hls_time 5 -segment_time 5 -hls_list_size 5 D:\\Projects\\ptpn5\\millena-holding-web\\public\\streaming\\$kode\\stream.m3u8";
-                        
-        //                 shell_exec("start /B $scriptDir");
-        //                 shell_exec("start /B $script");
-        //             }
-        //         }
-        //     } catch (Exception $e) {
-        //         Log::info($e);
-        //     }
-        // })->runInBackground();
     }
 
     /**
