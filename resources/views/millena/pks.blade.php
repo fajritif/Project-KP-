@@ -2,6 +2,15 @@
 
 @push('page_css')
     {{-- Tambahkan <style> disini --}}
+    <style>
+        .logo-icon-cctv {
+            width: 70px; /* Set your preferred width */
+            height: 30px; /* Set your preferred height */
+            padding-top: 0px;
+            padding-left: 50px;/* Adjust the value to your desired spacing */
+
+        }
+    </style>
 @endpush
 
 @push('page_scripts_header')
@@ -25,10 +34,11 @@
                         </div>
                         <div class="" id="{{ $item->DEVICE_ID }}"></div>
                         <div class="align-items-center text-center">
-                            <span id="{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}"></span>
+                            <span id="{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}" ></span>
                         </div>
                     </div>
                 </div>
+                <img src="{{ url('') }}/assets/images/icons/security-camera.png" class="logo-icon-cctv" alt="logo icon">
             </div>
         @endforeach
     </div>
