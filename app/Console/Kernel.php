@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
                         $escapedUrl = escapeshellarg($device->CAMERA_STREAMING);
                         $directoryPath = "D:/Projects/ptpn5/millena-holding-web/storage/app/streaming/$kode";
                         $scriptDir = "IF NOT EXIST \"$directoryPath\" (mkdir \"$directoryPath\")";
-                        $script = "ffmpeg -v verbose -i $escapedUrl -vcodec libx264 -r 25 -b:v 1000k -crf 23 -acodec aac -b:a 128k -sc_threshold 0 -f hls -hls_time 5 -segment_time 5 -hls_list_size 5 -hls_flags delete_segments D:/Projects/ptpn5/millena-holding-web/storage/app/streaming/$kode/stream.m3u8";
+                        $script = "ffmpeg -v verbose -rtsp_transport tcp -i $escapedUrl -vcodec libx264 -r 25 -b:v 1000k -crf 23 -acodec aac -b:a 128k -sc_threshold 0 -f hls -hls_time 5 -segment_time 5 -hls_list_size 5 -hls_flags delete_segments D:/Projects/ptpn5/millena-holding-web/storage/app/streaming/$kode/stream.m3u8";
                         $commands[] = "$scriptDir && start /B $script";
                     }
                 }
