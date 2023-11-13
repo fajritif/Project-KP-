@@ -51,6 +51,12 @@ Route::prefix('test')->group(function () {
     Route::resource('/admin/user', UserController::class)->only(['index','show', 'update'])->middleware(['auth']);
     Route::resource('/admin/device', DeviceController::class)->middleware(['auth']);
 
+
+    // Link Stream
+    Route::get('/ptpn/streaming/{device}/stream', [MillenaController::class, 'streaming'])->name('cctv.streaming')->middleware(['auth']);
+    Route::get('/streaming/{device}/stream', [MillenaController::class, 'getStreamFile'])->name('get-stream-file')->middleware(['auth']);
+    Route::get('/streaming/{device}/{file}', [MillenaController::class, 'getStreamFileTs'])->middleware(['auth']);
+
 Route::prefix('api')->group(function () {
     Route::get('/company/{company}/pks', [CompanyController::class, 'pks']);
     Route::get('/device-per-pks/{pks}', [DeviceController::class, 'current']);

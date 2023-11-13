@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 
 class MillenaController extends Controller
 {
@@ -29,7 +30,6 @@ class MillenaController extends Controller
     public function anper(Company $ptpn)
     {
         return redirect('ptpn/'.$ptpn->KODE.'/'.$ptpn->pks()->first()->KODE);
-        //return view('millena.anper');
     }
 
     public function pks(Pks $pks)
@@ -66,4 +66,33 @@ class MillenaController extends Controller
         }
         return view('millena.history', compact('data', 'deviceId', 'deviceList', 'detail', 'totalWorkHour'));
     }
+
+    public function streaming($pks)
+    {
+        return view("millena.cctv_streaming", [
+            "device" => $pks
+        ]);
+    }
+
+    public function getStreamFile($device)
+    {
+        $filePath = "streaming/$device/stream.m3u8";
+
+        if (Storage::exists($filePath)) {
+            return Storage::response($filePath);
+        } else {
+            abort(404);
+        }
+    }
+
+    public function getStreamFileTs($device, $tsFile)
+    {
+        $filePath = "streaming/$device/$tsFile";
+        if (Storage::exists($filePath)) {
+            return Storage::response($filePath);
+        } else {
+            abort(404);
+        }
+    }
+
 }
