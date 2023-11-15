@@ -48,11 +48,12 @@ class Kernel extends ConsoleKernel
 
                 foreach ($devices as $device) {
                     if ($device->CAMERA_STREAMING) {
-                        $kode = $device->KODE_DEVICE;
+                        $kode = rawurlencode($device->CAMERA_STREAMING);
+                        Log::info($kode);
                         $escapedUrl = escapeshellarg($device->CAMERA_STREAMING);
-                        $directoryPath = "C:/laragon/www/millena-holding-web/storage/app/streaming/$kode";
+                        $directoryPath = "D:/Projects/ptpn5/millena-holding-web/storage/app/streaming/$kode";
                         $scriptDir = "IF NOT EXIST \"$directoryPath\" (mkdir \"$directoryPath\")";
-                        $script = "ffmpeg -v verbose -rtsp_transport tcp -i $escapedUrl -vcodec libx264 -s 320x240 -r 25 -b:v 100k -crf 30 -acodec aac -sc_threshold 0 -f hls -hls_time 5 -segment_time 5 -hls_list_size 5 -hls_flags delete_segments C:/laragon/www/millena-holding-web/storage/app/streaming/$kode/stream.m3u8";
+                        $script = "ffmpeg -v verbose -rtsp_transport tcp -i $escapedUrl -vcodec libx264 -r 25 -b:v 1000k -crf 23 -acodec aac -b:a 128k -sc_threshold 0 -f hls -hls_time 5 -segment_time 5 -hls_list_size 5 -hls_flags delete_segments D:/Projects/ptpn5/millena-holding-web/storage/app/streaming/$kode/stream.m3u8";
                         $commands[] = "$scriptDir && start /B $script";
                     }
                 }

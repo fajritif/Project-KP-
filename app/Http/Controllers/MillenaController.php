@@ -76,6 +76,7 @@ class MillenaController extends Controller
 
     public function getStreamFile($device)
     {
+        $device = rawurlencode(decrypt($device));
         $filePath = "streaming/$device/stream.m3u8";
 
         if (Storage::exists($filePath)) {
@@ -87,6 +88,7 @@ class MillenaController extends Controller
 
     public function getStreamFileTs($device, $tsFile)
     {
+        $device = rawurlencode(decrypt($device));
         $filePath = "streaming/$device/$tsFile";
         if (Storage::exists($filePath)) {
             return Storage::response($filePath);
