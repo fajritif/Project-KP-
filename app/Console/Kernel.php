@@ -51,9 +51,12 @@ class Kernel extends ConsoleKernel
                         $kode = rawurlencode($device->CAMERA_STREAMING);
                         Log::info($kode);
                         $escapedUrl = escapeshellarg($device->CAMERA_STREAMING);
-                        $directoryPath = "c:/laragon/www/millena-holding-web/storage/app/streaming/$kode";
+                       // $directoryPath = "c:/laragon/www/millena-holding-web/storage/app/streaming/$kode";
+                        $directoryPath = env('LINK_DIRECTORY').'/'.$kode;
+                        //$directoryPathStreaming= "C:/laragon/www/millena-holding-web/storage/app/streaming/$kode/stream.m3u8";
+                        $directoryPathStreaming= env('LINK_DIRECTORY').'/'.$kode.'/stream.m3u8';
                         $scriptDir = "IF NOT EXIST \"$directoryPath\" (mkdir \"$directoryPath\")";
-                        $script = "ffmpeg -v verbose -rtsp_transport tcp -i $escapedUrl -vcodec libx264 -s 320x240 -r 25 -b:v 100k -crf 30 -acodec aac -sc_threshold 0 -f hls -hls_time 5 -segment_time 5 -hls_list_size 5 -hls_flags delete_segments C:/laragon/www/millena-holding-web/storage/app/streaming/$kode/stream.m3u8";
+                        $script = "ffmpeg -v verbose -rtsp_transport tcp -i $escapedUrl -vcodec libx264 -s 320x240 -r 25 -b:v 100k -crf 30 -acodec aac -sc_threshold 0 -f hls -hls_time 5 -segment_time 5 -hls_list_size 5 -hls_flags delete_segments $directoryPathStreaming ";
                         $commands[] = "$scriptDir && start /B $script";
                     }
                 }
