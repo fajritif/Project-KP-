@@ -48,8 +48,7 @@ class Kernel extends ConsoleKernel
 
                 foreach ($devices as $device) {
                     if ($device->CAMERA_STREAMING) {
-                        $kode = rawurlencode($device->CAMERA_STREAMING);
-                        Log::info($kode);
+                        $kode = preg_replace("/[^a-zA-Z0-9]/", "", $device->CAMERA_STREAMING);
                         $escapedUrl = escapeshellarg($device->CAMERA_STREAMING);
                        // $directoryPath = "c:/laragon/www/millena-holding-web/storage/app/streaming/$kode";
                         $directoryPath = env('LINK_DIRECTORY').'/'.$kode;

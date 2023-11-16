@@ -56,8 +56,8 @@
                         </div>
                     </div>
                     @if ($item->CAMERA_STREAMING)
-                    <a onclick="showStream(event)" href="javascript:void(0)" data-name="{{ $item->DEVICE_NAME }}" data-device="{{ encrypt($item->CAMERA_STREAMING) }}" data-bs-toggle="modal" data-bs-target="#stream-modal" class="cctv-btn">
-                        <img src="{{ url('') }}/assets/icon/security-camera.png" data-device="{{ encrypt($item->CAMERA_STREAMING) }}" data-name="{{ $item->DEVICE_NAME }}"/>
+                    <a onclick="showStream(event)" href="javascript:void(0)" data-name="{{ $item->DEVICE_NAME }}" data-device="{{ preg_replace("/[^a-zA-Z0-9]/", "", $item->CAMERA_STREAMING) }}" data-bs-toggle="modal" data-bs-target="#stream-modal" class="cctv-btn">
+                        <img src="{{ url('') }}/assets/icon/security-camera.png" data-device="{{ preg_replace("/[^a-zA-Z0-9]/", "", $item->CAMERA_STREAMING) }}" data-name="{{ $item->DEVICE_NAME }}"/>
                     </a>
                     @endif
                 </div>
