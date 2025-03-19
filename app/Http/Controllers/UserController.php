@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use stdClass;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class UserController extends Controller
 {
@@ -15,13 +17,11 @@ class UserController extends Controller
      */
     public function index()
     {        
-
         if(request()->ajax()){
             $data = collect(DB::select("exec USP_GET_USERS ")); 
 
             if(auth()->user()->ROLEID == 'ADMIN_ANPER'){
                 $data = $data->filter(function($d){
-                    //debug(sprintf("%s vs %s",auth()->user()->PTPN,$d->PTPN));
                     return auth()->user()->PTPN == $d->PTPN;
                 });
             }
@@ -38,6 +38,20 @@ class UserController extends Controller
             $roles = ['ADMIN_UNIT','ADMIN_ANPER','ADMIN_HOLDING','VIEWER_UNIT','VIEWER_ANPER','VIEWER_HOLDING'];
             return view('user.index', compact('roles'));
         }
+    }
+
+    /**
+     * Export user data to PDF.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function printPdf()
+    {
+        $users = User::all(); // Ambil semua data user dari database
+
+        $pdf = Pdf::loadView('users.pdf', compact('users'));
+
+        return $pdf->download('user-list.pdf');
     }
 
     /**
@@ -90,11 +104,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id=false)
+    public function update(Request $request, $id = false)
     {
-
         if(request()->ajax()){
-            debug($request->all());
             $response = new stdClass();
 
             $user = DB::select("exec USP_GET_USER_BY_NIK_SAP '".$request->nik_sap."'")[0];

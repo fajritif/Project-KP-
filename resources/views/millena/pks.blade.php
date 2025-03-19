@@ -1,311 +1,213 @@
 @extends('layouts.app')
 
 @push('page_css')
-    {{-- Tambahkan <style> disini --}}
-        <style>
-            .cctv-btn {
-                position: absolute;
-                /* border-right: 2px solid black;
-                border-bottom: 2px solid black; */
-                border-bottom-right-radius: 20px;
-                
-            }
-
-            .cctv-btn img {
-                padding-right: 2px;
-                padding-bottom: 8px;
-                height: 50px;
-            }
-
-            .cctv-btn:hover {
-                background-color: #E0F4FF;
-            }
-
-            #link-stream {
-                width: 100%;
-                height: 100%;
-            }
-        </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/css/bootstrap-datepicker.min.css">
+    <style>
+        .cctv-btn { position: absolute; border-bottom-right-radius: 20px; }
+        .cctv-btn img { height: 50px; }
+        #link-stream { width: 100%; height: 100%; }
+    </style>
 @endpush
 
 @push('page_scripts_header')
-<link rel="stylesheet" href="{{ url('') }}/css/video-js.css">
+    <link rel="stylesheet" href="{{ url('') }}/css/video-js.css">
     <script src="{{ url('') }}/assets/js/moment.js"></script>
     <script src="{{ url('') }}/js/video.min.js"></script>
     <script src="{{ url('') }}/js/videojs-http-streaming.min.js"></script>
 @endpush
 
 @section('content')
+    <h6 class="mb-0 text-uppercase">
+        Data Widgets
+        @foreach($pksName as $Name)
+            {{ $Name->NAMA }}
+        @endforeach
+    </h6>
+    <br>
 
-    <h6 class="mb-0 text-uppercase">Data Widgets  @foreach($pksName as $Name)
-    {{$Name->NAMA }}@endforeach</h6>
-    <hr/>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4">
+    <!-- Tombol Cetak PDF -> memunculkan Modal -->
+    <div class="d-flex align-items-end mb-3">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#rekapModal">
+            <i class="bi bi-printer"></i> Cetak PDF
+        </button>
+    </div>
+
+    <!-- (Contoh) Tampilan Card Device -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-xl-4" id="gaugeContainer">
+        <!-- Loop data device -->
         @foreach($data as $item)
             <div class="col">
                 <div class="card radius-10" style="cursor: pointer">
                     <div onclick="handleClickDevice('{{ $item->DEVICE_ID }}')" class="card-body mt-5">
-                        <div class="align-items-center">
-                            <div class="text-center">
-                                <h6 class="mb-0 mt-3">{{ $item->DEVICE_NAME }}</h6>
-                            </div>
+                        <div class="text-center">
+                            <h6 class="mb-0 mt-3">{{ $item->DEVICE_NAME }}</h6>
                         </div>
-                        <div class="" id="{{ $item->DEVICE_ID }}"></div>
-                        <div class="align-items-center text-center">
-                            <span id="{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}"></span>
+                        <div id="{{ $item->DEVICE_ID }}"></div>
+                        <div class="text-center">
+                            <span id="{{ 'lastUpdate'.str_replace('-', '', $item->DEVICE_ID) }}"></span>
                         </div>
                     </div>
-                    @if ($item->CAMERA_STREAMING)
-                    <a onclick="showStream(event)" href="javascript:void(0)" data-name="{{ $item->DEVICE_NAME }}" data-device="{{ preg_replace("/[^a-zA-Z0-9]/", "", $item->CAMERA_STREAMING) }}" data-bs-toggle="modal" data-bs-target="#stream-modal" class="cctv-btn">
-                        <img src="{{ url('') }}/assets/icon/security-camera.png" data-device="{{ preg_replace("/[^a-zA-Z0-9]/", "", $item->CAMERA_STREAMING) }}" data-name="{{ $item->DEVICE_NAME }}"/>
-                    </a>
-                    @endif
                 </div>
             </div>
         @endforeach
     </div>
 
-    {{-- Modal Streaming --}}
-    <div class="modal fade" id="stream-modal" tabindex="-1" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="title-modal"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <iframe id="link-stream" src="" frameborder="0"></iframe>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
+    <!-- Modal "Rekap Data" -->
+    <div class="modal fade" id="rekapModal" tabindex="-1" aria-labelledby="rekapModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <!-- Header Modal -->
+          <div class="modal-header">
+            <h5 class="modal-title" id="rekapModalLabel">Rekap Data</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <!-- Body Modal -->
+          <div class="modal-body">
+            <form id="rekapForm">
+              <!-- Pilih Tanggal -->
+              <div class="mb-3">
+                <label for="rekapDate" class="form-label">Pilih Tanggal</label>
+                <input type="date" class="form-control" id="rekapDate" placeholder="dd/mm/yyyy">
+              </div>
+              <!-- Pilih Device -->
+              <div class="mb-3">
+                <label for="deviceSelect" class="form-label">Pilih Device</label>
+                <select class="form-select" id="deviceSelect">
+                    <option value="">- Pilih Device -</option>
+                    <option value="BLR1">BOILER NOMOR 1</option>
+                    <option value="BLR2">BOILER NOMOR 2</option>
+                    <option value="BLR2">BOILER NOMOR 3</option>
+                    <option value="BPV1">BACK PRESSURE VESSEL NOMOR 1</option>
+                    <option value="CST1">CONTINUOUS SETTLING TANK NOMOR 1</option>
+                    <option value="CST1">CONTINUOUS SETTLING TANK NOMOR 2</option>
+                    <option value="RBS1">REBUSAN NOMOR 1</option>
+                    <option value="RBS2">REBUSAN NOMOR 2</option>
+                    <option value="RBS3">REBUSAN NOMOR 3</option>
+                    <option value="RBS4">REBUSAN NOMOR 4</option>
+                    <option value="RBS4">REBUSAN NOMOR 5</option>
+                    <option value="CST1">PRESS NOMOR 1</option>
+                    <option value="CST1">PRESS NOMOR 2</option>
+                    <option value="CST1">PRESS NOMOR 3</option>
+                    <option value="CST1">PRESS NOMOR 4</option>
+                    <option value="CST1">WATER TREATMENT PLANT</option>
+                    <option value="RBS4">WATER TREATMENT PLANT (PH)</option>
+                    <option value="RBS4">WATER TREATMENT NOMOR 1</option>
+                </select>
             </div>
+          </form>
         </div>
+        <!-- Footer Modal -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+          <button type="button" class="btn btn-success" id="cetakPdfBtn">Cetak PDF</button>
+        </div>
+      </div>
     </div>
-    {{-- End Modal Streaming --}}
+  </div>
 @endsection
 
 @push('page_scripts')
-    {{-- Tambahkan <script> disini --}}
-    <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts.js"></script>
-    <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
-    <script>
+  <!-- (Opsional) Datepicker JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap-datepicker@1.9.0/dist/js/bootstrap-datepicker.min.js"></script>
+  <!-- Highcharts -->
+  <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts.js"></script>
+  <script src="{{ url('') }}/assets/plugins/highcharts/js/highcharts-more.js"></script>
+  <script>
+      // 1) CETAK PDF -> fetch blob
+      document.getElementById('cetakPdfBtn').addEventListener('click', function() {
+          const dateValue   = document.getElementById('rekapDate').value;
+          const deviceValue = document.getElementById('deviceSelect').value;
 
-        function showStream(e) {
-            const deviceId = e.target.getAttribute("data-device");
-            const deviceName = e.target.getAttribute("data-name");
-            $("#title-modal").html(deviceName);
-            let url = `{{ route('cctv.streaming', ':id') }}`.replace(':id', deviceId);
-            $("#link-stream").attr("src", url)
+          if (!dateValue || !deviceValue) {
+              alert('Silakan pilih tanggal & device!');
+              return;
+          }
+
+          const url = '/ptpn/device/pdf?date=' + encodeURIComponent(dateValue)
+                    + '&device=' + encodeURIComponent(deviceValue);
+
+                    fetch(url)
+            .then(response => {
+        console.log('Status:', response.status);
+        console.log('Content-Type:', response.headers.get('Content-Type'));
+        if (!response.ok) {
+            throw new Error('HTTP error ' + response.status);
         }
-        document.getElementById("link-stream").onload = function () {
-            // Mengambil tinggi iframe
-            var iframeHeight = this.contentWindow.document.body.scrollHeight;
+        return response.blob();
+    })
+              .then(blob => {
+                  console.log('Blob size:', blob.size, 'bytes');
+                  if (blob.size < 1024) {
+                      alert('File PDF yang diunduh sangat kecil, kemungkinan terjadi error di server.');
+                  }
+                  const link = document.createElement('a');
+                  link.href = window.URL.createObjectURL(blob);
+                  link.download = 'rekap_data.pdf';
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+              })
+              .catch(error => {
+                  console.error('Gagal download PDF:', error);
+                  alert('Terjadi kesalahan saat mengunduh PDF.');
+              });
+      });
 
-            var modalBody = document.querySelector(".modal-body");
-            modalBody.style.height = iframeHeight+50 + "px";
-        };
+      // 2) GAUGE & REALTIME (Contoh ringkas)
+      function handleClickDevice(deviceId) {
+          window.location.href = '{{ url("ptpn/device/") }}/' + deviceId;
+      }
 
-        $('#stream-modal').on('hidden.bs.modal', function () {
-        // Menghapus src iframe
-            document.getElementById("link-stream").src = "";
-        });
+      function drawGaugeChart(chartId, lastUpdateId, dataValue, lastUpdate, gaugeTitle, gaugeSatuan, standartBlock) {
+          // Tampilkan last update
+          if (lastUpdate) {
+              document.getElementById(lastUpdateId).textContent = "Last update " + moment(lastUpdate, "YYYY-MM-DD HH:mm:ss").fromNow();
+          } else {
+              document.getElementById(lastUpdateId).textContent = "Device Not Active";
+          }
+          return Highcharts.chart(chartId, {
+              chart: { type: 'gauge', height: 200, marginTop: 0 },
+              credits: { enabled: false },
+              title: { text: null },
+              pane: {
+                  startAngle: -150, endAngle: 150,
+                  background: [/* background config */]
+              },
+              yAxis: {
+                  min: 0, max: standartBlock[2],
+                  plotBands: [
+                      { from: 0, to: standartBlock[0], color: '#DF5353' },
+                      { from: standartBlock[0], to: standartBlock[1], color: '#DDDF0D' },
+                      { from: standartBlock[1], to: standartBlock[2], color: '#55BF3B' }
+                  ]
+              },
+              series: [{
+                  name: gaugeTitle,
+                  data: [dataValue],
+                  tooltip: { valueSuffix: gaugeSatuan }
+              }]
+          });
+      }
 
-        moment.relativeTimeThreshold('ss', 0);
-        function handleClickDevice(deviceId) {
-            window.location.href = '{{ url("ptpn/device/") }}/'+deviceId
-        }
-
-        function drawGaugeChart(chartId, lastUpdateId, dataValue, lastUpdate, gaugeTitle, gaugeSatuan, standartBlock) {
-            if (lastUpdate) {
-                document.getElementById(lastUpdateId).textContent = "Last update "+moment(lastUpdate, "YYYY-MM-DD HH:mm:ss").fromNow();
-            } else {
-                document.getElementById(lastUpdateId).textContent = "Device Not Active";
-            }
-            let chart = Highcharts.chart(chartId, {
-                    chart: {
-                        type: 'gauge',
-                        plotBackgroundColor: null,
-                        plotBackgroundImage: null,
-                        plotBorderWidth: 0,
-                        plotShadow: false,
-                        height: 200,
-                        marginTop: 0
-                    },
-                    credits: {
-                        enabled: false
-                    },
-                    title: {
-                        text: null
-                    },
-                    pane: {
-                        startAngle: -150,
-                        endAngle: 150,
-                        background: [{
-                            backgroundColor: {
-                                linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
-                                stops: [
-                                    [0, '#FFF'],
-                                    [1, '#333']
-                                ]
-                            },
-                            borderWidth: 0,
-                            outerRadius: '109%'
-                        }, {
-                            backgroundColor: {
-                                linearGradient: {x1: 0, y1: 0, x2: 0, y2: 1},
-                                stops: [
-                                    [0, '#333'],
-                                    [1, '#FFF']
-                                ]
-                            },
-                            borderWidth: 1,
-                            outerRadius: '107%'
-                        }, {
-                            // default background
-                        }, {
-                            backgroundColor: '#DDD',
-                            borderWidth: 0,
-                            outerRadius: '105%',
-                            innerRadius: '103%'
-                        }]
-                    },
-                    // the value axis
-                    yAxis: {
-                        min: 0,
-                        max: standartBlock[2],
-
-                        minorTickInterval: 'auto',
-                        minorTickWidth: 1,
-                        minorTickLength: 10,
-                        minorTickPosition: 'inside',
-                        minorTickColor: '#666',
-
-                        tickPixelInterval: 30,
-                        tickWidth: 2,
-                        tickPosition: 'inside',
-                        tickLength: 10,
-                        tickColor: '#666',
-                        labels: {
-                            step: 2,
-                            rotation: 'auto'
-                        },
-                        title: {
-                            text: gaugeSatuan
-                        },
-                        plotBands: [{
-                            from: 0,
-                            to: standartBlock[0],
-                            color: '#DF5353' // red
-                        }, {
-                            from: standartBlock[0],
-                            to: standartBlock[1],
-                            color: '#DDDF0D' // yellow
-                        }, {
-                            from: standartBlock[1],
-                            to: standartBlock[2],
-                            color: '#55BF3B' // green
-                        }]
-                    },
-                    series: [{
-                        name: gaugeTitle,
-                        data: [dataValue],
-                        tooltip: {
-                            valueSuffix: gaugeSatuan
-                        }
-                    }],
-                },
-                // Add some life
-                /*function (chart) {
-                    if (!chart.renderer.forExport) {
-                        setInterval(function () {
-                            var point = chart.series[0].points[0],
-                                newVal,
-                                inc = Math.round((Math.random() - 0.5) * 20);
-
-                            newVal = point.y + inc;
-                            if (newVal < 0 || newVal > 25) {
-                                newVal = point.y - inc;
-                            }
-
-                            point.update(newVal);
-
-                        }, 3000);
-                    }
-                }*/);
-            return chart
-        }
-
-        $(document).ready(function () {
-            let arrGauge = []
-            @foreach($data as $item)
-                @php
-                $fDate = null;
-                $valData = 0;
-                $standartBlock = [10,17,30];
-                if(preg_match('(BLR|BPV|PRS|RBS|TRB)', $item->DEVICE_ID) === 1) {
-                    $valData = round($item->PRESSURE, 2);
-                }
-                if(preg_match('(BPV|RBS)', $item->DEVICE_ID) === 1) {
-                    $standartBlock = [1,3,5];
-                }
-                if(false !== strpos($item->DEVICE_ID, "PRS")) {
-                    $standartBlock = [30,50,70];
-                }
-                if(preg_match('(CST|DIG|FED|GEN)', $item->DEVICE_ID) === 1) {
-                    $valData = round($item->TEMPERATURE, 2);
-                    $standartBlock = [80,110,150];
-                }
-                if(false !== strpos($item->DEVICE_ID, "WTP")) {
-                    $valData = round($item->PH, 2);
-                    $standartBlock = [4,8,14];
-                }
-                if(false !== strpos($item->DEVICE_ID, "CBC")) {
-                    $valData = round($item->ARUS, 2);
-                    $standartBlock = [30,50,70];
-                }
-                if ($item->TANGGAL != null) { $fDate = $item->TANGGAL; }
-                @endphp
-                arrGauge["{{ $item->DEVICE_ID  }}"] =
-                drawGaugeChart(
-                    '{{ $item->DEVICE_ID }}',
-                    '{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}',
-                    {{ $valData }},
-                    '{{ $fDate ?: "" }}',
-                    '{{ $item->TITLE_PAGE }}',
-                    '{{ $item->SATUAN }}',
-                    @json($standartBlock)
-                )
-            @endforeach
-            setInterval(function () {
-                fetch('{{ url('api/device-per-pks/'.$pks) }}').then(function (response) {
-                    return response.json()
-                }).then(function (data) {
-                    data.forEach((element) => {
-                        let dataVal = 0;
-                        if(element.DEVICE_ID.match(/BLR|BPV|PRS|RBS|TRB/)) {
-                            dataVal = Math.round(element.PRESSURE*100)/100
-                        }
-                        if(element.DEVICE_ID.match(/CST|DIG|FED|GEN/)) {
-                            dataVal = Math.round(element.TEMPERATURE*100)/100
-                        }
-                        if(element.DEVICE_ID.match(/WTP/)) {
-                            dataVal = Math.round(element.PH*100)/100
-                        }
-                        if(element.DEVICE_ID.match(/CBC/)) {
-                            dataVal = Math.round(element.ARUS*100)/100
-                        }
-                        arrGauge[element.DEVICE_ID].series[0].points[0].update(dataVal)
-                        let textUpdateId = "lastUpdate"+element.DEVICE_ID.replaceAll("-", "");
-                        if (element.TANGGAL != null) {
-                            document.getElementById(textUpdateId).textContent = "Last update "+moment(element.TANGGAL, "YYYY-MM-DD HH:mm:ss").fromNow();
-                        } else {
-                            document.getElementById(textUpdateId).textContent = "Device Not Active";
-                        }
-                    })
-                })
-            }, 10000)
-        })
-    </script>
+      let arrGauge = [];
+      $(document).ready(function () {
+          // Contoh loop device
+          @foreach($data as $item)
+              @php
+                  $fDate = $item->TANGGAL ?? null;
+                  $valData = $item->PRESSURE ?? 0;
+                  $standartBlock = [10,17,30]; // contoh range
+              @endphp
+              arrGauge["{{ $item->DEVICE_ID }}"] = drawGaugeChart(
+                  '{{ $item->DEVICE_ID }}',
+                  '{{ "lastUpdate".str_replace("-", "", $item->DEVICE_ID) }}',
+                  {{ $valData }},
+                  '{{ $fDate }}',
+                  '{{ $item->TITLE_PAGE }}',
+                  '{{ $item->SATUAN }}',
+                  @json($standartBlock)
+              );
+          @endforeach
+      });
+  </script>
 @endpush
-

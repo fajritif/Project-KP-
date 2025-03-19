@@ -10,7 +10,7 @@ class Pks extends Model
 {
     use HasFactory;
 
-    protected $table='M_PKS';
+    protected $table = 'M_PKS';
     protected $primaryKey = 'KODE';
     protected $keyType = 'string';
     protected $appends = ['nama2'];
@@ -22,7 +22,9 @@ class Pks extends Model
 
     public function getNama2Attribute()
     {
-        return Str::of(Str::title($this->NAMA))->replace('Pks','PKS')->replace('Pabrik Kelapa Sawit', 'PKS');
+        return Str::of(Str::title($this->NAMA))
+            ->replace('Pks', 'PKS')
+            ->replace('Pabrik Kelapa Sawit', 'PKS');
     }
 
     public function getNamaCompanyAttribute()
@@ -35,4 +37,9 @@ class Pks extends Model
         return $this->company->nama_panjang;
     }
 
+    // Relasi ke model Widget
+    public function widgets()
+    {
+        return $this->hasMany(Widget::class, 'pks_id');
+    }
 }

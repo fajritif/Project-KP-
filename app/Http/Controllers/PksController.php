@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pks;
+use Barryvdh\DomPDF\Facade\Pdf as FacadePdf;
 use Illuminate\Http\Request;
+use PDF; // Alias PDF harus sesuai konfigurasi
 
 class PksController extends Controller
 {
@@ -84,12 +86,39 @@ class PksController extends Controller
         //
     }
 
+    /**
+     * Get PKS data by company code.
+     *
+     * @param  string $company_code
+     * @return \Illuminate\Http\Response
+     */
     public function by_company($company_code)
     {
         $pkss = Pks::where('COMPANY_CODE', $company_code)->get();
         $pkss->load('company');
         $pkss->append(['nama_company', 'nama_company_panjang']);
-        //dump($pkss->toArray()); return '';
         return response()->json($pkss);
+    }
+
+    /**
+     * Export PDF for a specific PKS.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function exportPdf($id) {
+        // Ambil data PKS dengan relasi widgets
+        $pks = Pks::with('widgets')->where('KODE', $id)->firstOrFail();
+
+        $data = [
+            'title' => 'Data Widgets PKS ' . $pks->NAMA,
+            'widgets' => $pks->widgets
+        ];
+
+        // Pemanggilan PDF
+        $pdf = FacadePdf::loadView('pks_pdf', $data);
+
+        // Format filename saat di-download
+        return $pdf->download('data-pks-' . $pks->getKey() . '.pdf');
     }
 }

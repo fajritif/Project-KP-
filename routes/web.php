@@ -7,56 +7,50 @@ use App\Http\Controllers\MillenaController;
 use App\Http\Controllers\PksController;
 use App\Http\Controllers\StasiunController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PdfController;
 use Illuminate\Support\Facades\Route;
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
+use App\Http\Controllers\MonitoringReportController; 
 
 Route::get('/', function () {
     return redirect('ptpn');
 });
-/*
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-*/
-/*
-Route::prefix('test')->group(function () {
-    Route::get('/login', function () {
-        return view('test.login');
-    });
-    Route::get('/home', function () {
-        return view('layouts.app');
-    });
+
+// ============================
+// Routes untuk Halaman Utama
+// ============================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ptpn', [MillenaController::class, 'holding']);
+    Route::get('/ptpn/device/{deviceId}', [MillenaController::class, 'history']);
+    Route::get('/ptpn/pks/{pks}', [MillenaController::class, 'pks']);
+    Route::get('/holding', [MillenaController::class, 'holding']);
 });
-*/
 
-    Route::get('/ptpn', [MillenaController::class, 'holding'])->middleware(['auth']);
-    Route::get('/ptpn/device/{deviceId}', [MillenaController::class, 'history'])->middleware(['auth']);
-    //Route::get('/ptpn/{ptpn}', [MillenaController::class, 'anper']);
-    Route::get('/ptpn/pks/{pks}', [MillenaController::class, 'pks'])->middleware(['auth']);
-    //Route::get('/ptpn/{ptpn}/{pks}/history', [MillenaController::class, 'history']);
-    Route::get('/holding', [MillenaController::class, 'holding'])->middleware(['auth']);
-    Route::get('/admin/device/index-ajax', [MillenaController::class, 'index_ajax'])->middleware(['auth']);
-    Route::put('/admin/user', [UserController::class, 'update'])->middleware(['auth']);
-    Route::delete('/admin/user', [UserController::class, 'destroy'])->middleware(['auth']);
-    Route::resource('/admin/user', UserController::class)->only(['index','show', 'update'])->middleware(['auth']);
-    Route::resource('/admin/device', DeviceController::class)->middleware(['auth']);
+// ============================
+// Routes untuk Admin & User
+// ============================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/admin/device/index-ajax', [MillenaController::class, 'index_ajax']);
+    
+    // Route::put dan Route::delete dihapus karena sudah di-handle oleh resource
+    Route::resource('/admin/user', UserController::class)->only(['index', 'show', 'update', 'destroy']);
+    Route::resource('/admin/device', DeviceController::class);
 
+    // ✅ Route untuk export PDF user
+    Route::get('/users/print', [UserController::class, 'printPdf'])->name('users.print');
+});
 
-    // Link Stream
-    Route::get('/ptpn/streaming/{device}/stream', [MillenaController::class, 'streaming'])->name('cctv.streaming')->middleware(['auth']);
-    Route::get('/streaming/{device}/stream', [MillenaController::class, 'getStreamFile'])->name('get-stream-file')->middleware(['auth']);
-    Route::get('/streaming/{device}/{file}', [MillenaController::class, 'getStreamFileTs'])->middleware(['auth']);
+// ============================
+// Routes untuk Link Streaming
+// ============================
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ptpn/streaming/{device}/stream', [MillenaController::class, 'streaming'])->name('cctv.streaming');
+    Route::get('/streaming/{device}/stream', [MillenaController::class, 'getStreamFile'])->name('get-stream-file');
+    Route::get('/streaming/{device}/{file}', [MillenaController::class, 'getStreamFileTs']);
+});
 
+// ============================
+// Routes untuk API
+// ============================
 Route::prefix('api')->group(function () {
     Route::get('/company/{company}/pks', [CompanyController::class, 'pks']);
     Route::get('/device-per-pks/{pks}', [DeviceController::class, 'current']);
@@ -70,7 +64,26 @@ Route::prefix('api')->group(function () {
     Route::resource('/company', CompanyController::class)->only(['index','show']);
     Route::resource('/pks', PksController::class)->only(['index','show']);
     Route::resource('/stasiun', StasiunController::class)->only(['index','show']);
-    Route::post('/login', [AuthenticatedSessionController::class, 'api_login'] );
+    
+    // ✅ Route API Login
+    Route::post('/login', [AuthenticatedSessionController::class, 'api_login']);
 });
 
+// ============================
+// Routes untuk Export PDF PKS
+// ============================
+
+Route::get('/chart', function () {
+    $data = \App\Models\Device::first(); // Contoh data untuk preview
+    $chartData = [
+        'id' => $data->DEVICE_ID,
+        'value' => $data->PRESSURE ?? $data->TEMPERATURE ?? $data->PH ?? $data->ARUS ?? 0,
+        'title' => $data->TITLE_PAGE,
+        'unit' => $data->SATUAN,
+        'standartBlock' => [10, 17, 30]
+    ];
+    return view('pdf.chart', compact('chartData'));
+});
+
+Route::get('/ptpn/device/pdf/{pks}', [MonitoringReportController::class, 'generatePdf'])->name('device.pdf'); 
 require __DIR__.'/auth.php';
