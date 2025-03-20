@@ -69,37 +69,13 @@
                 <label for="rekapDate" class="form-label">Pilih Tanggal</label>
                 <input type="date" class="form-control" id="rekapDate" placeholder="dd/mm/yyyy">
               </div>
-              <!-- Pilih Device -->
-              <div class="mb-3">
-                <label for="deviceSelect" class="form-label">Pilih Device</label>
-                <select class="form-select" id="deviceSelect">
-                    <option value="">- Pilih Device -</option>
-                    <option value="BLR1">BOILER NOMOR 1</option>
-                    <option value="BLR2">BOILER NOMOR 2</option>
-                    <option value="BLR2">BOILER NOMOR 3</option>
-                    <option value="BPV1">BACK PRESSURE VESSEL NOMOR 1</option>
-                    <option value="CST1">CONTINUOUS SETTLING TANK NOMOR 1</option>
-                    <option value="CST1">CONTINUOUS SETTLING TANK NOMOR 2</option>
-                    <option value="RBS1">REBUSAN NOMOR 1</option>
-                    <option value="RBS2">REBUSAN NOMOR 2</option>
-                    <option value="RBS3">REBUSAN NOMOR 3</option>
-                    <option value="RBS4">REBUSAN NOMOR 4</option>
-                    <option value="RBS4">REBUSAN NOMOR 5</option>
-                    <option value="CST1">PRESS NOMOR 1</option>
-                    <option value="CST1">PRESS NOMOR 2</option>
-                    <option value="CST1">PRESS NOMOR 3</option>
-                    <option value="CST1">PRESS NOMOR 4</option>
-                    <option value="CST1">WATER TREATMENT PLANT</option>
-                    <option value="RBS4">WATER TREATMENT PLANT (PH)</option>
-                    <option value="RBS4">WATER TREATMENT NOMOR 1</option>
-                </select>
-            </div>
-          </form>
-        </div>
-        <!-- Footer Modal -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-          <button type="button" class="btn btn-success" id="cetakPdfBtn">Cetak PDF</button>
+            </form>
+          </div>
+          <!-- Footer Modal -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+            <button type="button" class="btn btn-success" id="cetakPdfBtn">Cetak PDF</button>
+          </div>
         </div>
       </div>
     </div>
@@ -115,42 +91,40 @@
   <script>
       // 1) CETAK PDF -> fetch blob
       document.getElementById('cetakPdfBtn').addEventListener('click', function() {
-          const dateValue   = document.getElementById('rekapDate').value;
-          const deviceValue = document.getElementById('deviceSelect').value;
+          const dateValue = document.getElementById('rekapDate').value;
 
-          if (!dateValue || !deviceValue) {
-              alert('Silakan pilih tanggal & device!');
+          if (!dateValue) {
+              alert('Silakan pilih tanggal!');
               return;
           }
 
-          const url = '/ptpn/device/pdf?date=' + encodeURIComponent(dateValue)
-                    + '&device=' + encodeURIComponent(deviceValue);
+          const url = '/ptpn/device/pdf?date=' + encodeURIComponent(dateValue);
 
-                    fetch(url)
+          fetch(url)
             .then(response => {
-        console.log('Status:', response.status);
-        console.log('Content-Type:', response.headers.get('Content-Type'));
-        if (!response.ok) {
-            throw new Error('HTTP error ' + response.status);
-        }
-        return response.blob();
-    })
-              .then(blob => {
-                  console.log('Blob size:', blob.size, 'bytes');
-                  if (blob.size < 1024) {
-                      alert('File PDF yang diunduh sangat kecil, kemungkinan terjadi error di server.');
-                  }
-                  const link = document.createElement('a');
-                  link.href = window.URL.createObjectURL(blob);
-                  link.download = 'rekap_data.pdf';
-                  document.body.appendChild(link);
-                  link.click();
-                  document.body.removeChild(link);
-              })
-              .catch(error => {
-                  console.error('Gagal download PDF:', error);
-                  alert('Terjadi kesalahan saat mengunduh PDF.');
-              });
+                console.log('Status:', response.status);
+                console.log('Content-Type:', response.headers.get('Content-Type'));
+                if (!response.ok) {
+                    throw new Error('HTTP error ' + response.status);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                console.log('Blob size:', blob.size, 'bytes');
+                if (blob.size < 1024) {
+                    alert('File PDF yang diunduh sangat kecil, kemungkinan terjadi error di server.');
+                }
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = 'rekap_data.pdf';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => {
+                console.error('Gagal download PDF:', error);
+                alert('Terjadi kesalahan saat mengunduh PDF.');
+            });
       });
 
       // 2) GAUGE & REALTIME (Contoh ringkas)
