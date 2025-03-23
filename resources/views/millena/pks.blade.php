@@ -74,7 +74,7 @@
           <!-- Footer Modal -->
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-            <button type="button" class="btn btn-success" id="cetakPdfBtn">Cetak PDF</button>
+            <button type="button" class="btn btn-success" id="cetakPdfBtn">cetak Pdf</button>
           </div>
         </div>
       </div>
@@ -91,41 +91,53 @@
   <script>
       // 1) CETAK PDF -> fetch blob
       document.getElementById('cetakPdfBtn').addEventListener('click', function() {
-          const dateValue = document.getElementById('rekapDate').value;
+    const dateValue = document.getElementById('rekapDate').value;
 
-          if (!dateValue) {
-              alert('Silakan pilih tanggal!');
-              return;
-          }
+    if (!dateValue) {
+        alert('Silakan pilih tanggal!');
+        return;
+    }
 
-          const url = '/ptpn/device/pdf?date=' + encodeURIComponent(dateValue);
+    // Ambil semua PKS yang ada di halaman (dari $pksName)
+    const pksNames = @json(array_column($pksName, 'NAMA')); // Menggunakan array_column
 
-          fetch(url)
-            .then(response => {
-                console.log('Status:', response.status);
-                console.log('Content-Type:', response.headers.get('Content-Type'));
-                if (!response.ok) {
-                    throw new Error('HTTP error ' + response.status);
-                }
-                return response.blob();
-            })
-            .then(blob => {
-                console.log('Blob size:', blob.size, 'bytes');
-                if (blob.size < 1024) {
-                    alert('File PDF yang diunduh sangat kecil, kemungkinan terjadi error di server.');
-                }
-                const link = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download = 'rekap_data.pdf';
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            })
-            .catch(error => {
-                console.error('Gagal download PDF:', error);
-                alert('Terjadi kesalahan saat mengunduh PDF.');
-            });
-      });
+    // Kirim tanggal dan PKS ke server
+    const url = `/cobaPdf?date=${encodeURIComponent(dateValue)}&pks=${encodeURIComponent(pksNames.join(','))}`;
+
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Accept': 'application/pdf'
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('HTTP error ' + response.status);
+        }
+        return response.blob();
+    })
+    .then(blob => {
+        if (blob.size < 1024) {
+            alert('File PDF yang diunduh sangat kecil, kemungkinan terjadi error di server.');
+            return;
+        }
+        
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = `cobaPdf_${dateValue}.pdf`; // Nama file sesuai dengan nama endpoint
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Tutup modal setelah sukses
+        $('#rekapModal').modal('hide');
+    })
+    .catch(error => {
+        console.error('Gagal download PDF:', error);
+        alert('Terjadi kesalahan saat mengunduh PDF.');
+    });
+});
+
 
       // 2) GAUGE & REALTIME (Contoh ringkas)
       function handleClickDevice(deviceId) {
