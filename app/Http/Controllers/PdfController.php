@@ -26,7 +26,7 @@ class PdfController extends Controller
             $charts[] = $chartData;
         }
 
-        $pdf = Pdf::loadView('pdf.report', compact('data', 'charts'))->setPaper('a4', 'portrait');
+        $pdf = Pdf::loadView('report.pdf', compact('data', 'charts'))->setPaper('a4', 'portrait');
         return $pdf->stream('report.pdf');
     }
 
@@ -51,28 +51,26 @@ class PdfController extends Controller
         return [10, 17, 30];
     }
 
-    // Fungsi untuk membuat grafik dalam format base64
-    private function generateChartBase64($chartData)
-    {
-        $chartOptions = [
-            'chart' => ['type' => 'gauge', 'height' => 200],
-            'title' => ['text' => $chartData['title']],
-            'pane' => ['startAngle' => -150, 'endAngle' => 150],
-            'yAxis' => [
-                'min' => 0,
-                'max' => $chartData['standartBlock'][2],
-                'plotBands' => [
-                    ['from' => 0, 'to' => $chartData['standartBlock'][0], 'color' => '#DF5353'], // Merah
-                    ['from' => $chartData['standartBlock'][0], 'to' => $chartData['standartBlock'][1], 'color' => '#DDDF0D'], // Kuning
-                    ['from' => $chartData['standartBlock'][1], 'to' => $chartData['standartBlock'][2], 'color' => '#55BF3B'] // Hijau
-                ]
-            ],
-            'series' => [['data' => [$chartData['value']]]]
-        ];
+   public function generatePdf(Request $request)
+{
+    $date = $request->query('date');
+    $pksNames = explode(',', $request->query('pks'));
+    
 
-        $chartJson = json_encode($chartOptions);
-        $chartImage = file_get_contents("https://export.highcharts.com/?options=" . urlencode($chartJson));
-        
-        return base64_encode($chartImage);
+    if (!$date || empty($pksNames)) {
+        abort(400, 'Parameter tidak lengkap');
     }
+
+    // Lakukan logika pengolahan data di sini jika diperlukan
+    $data = [
+        'date' => $date,
+        'pksNames' => $pksNames,
+    ];
+
+    // Load PDF dengan data yang dikirim
+    $pdf = PDF::loadView('pdf.cobaPdf', $data);
+
+    return $pdf->download("cobaPdf_{$date}.pdf");
+}
+
 }
