@@ -85,5 +85,11 @@ Route::get('/chart', function () {
     return view('pdf.chart', compact('chartData'));
 });
 
-Route::get('/ptpn/device/pdf/{pks}', [MonitoringReportController::class, 'generatePdf'])->name('device.pdf'); 
+// Route::get('/ptpn/device/pdf/{pks}', [MonitoringReportController::class, 'generatePdf'])->name('device.pdf'); 
+
+// Route::get('/ptpn/device/pdf', [MonitoringReportController::class, 'printPDF']);
+
+Route::get('/cobaPdf', [PdfController::class, 'generatePdf']);
+
+
 require __DIR__.'/auth.php';
